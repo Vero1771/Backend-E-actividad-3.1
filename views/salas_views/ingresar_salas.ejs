@@ -1,0 +1,24 @@
+<%-include("../components/head.ejs")%>
+
+  <body>
+    <%-include("../components/nav.ejs")%>
+      <main>
+        <h1>Ingresar <%= title %></h1>
+
+        <form class="formEntidad" action method="post">
+
+          <label id="nombre">Nombre
+            <input type="text" name="nombre" required>
+          </label><br>
+
+          <label id="capacidad">Capacidad
+            <input type="number" name="capacidad" required>
+          </label><br>
+
+          <input type="submit">
+
+        </form>
+      </main>
+  </body>
+
+  <%-include("../components/footer.ejs")%>

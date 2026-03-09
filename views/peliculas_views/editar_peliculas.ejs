@@ -1,0 +1,58 @@
+<%-include("../components/head.ejs")%>
+<body>
+    <%-include("../components/nav.ejs")%>
+    <main>
+      <h1><%= title %>: <%= peli.titulo %></h1>
+
+      <form class="formEntidad" action="/peliculas/editar/<%= peli.id_pelicula %>?_method=PUT" method="post">
+          <label>Título
+              <input type="text" name="titulo" value="<%= peli.titulo %>" required>
+          </label><br>
+
+          <label>Año
+              <input type="number" name="anio" value="<%= peli.anio %>" required>
+          </label><br>
+
+          <label>Duración
+              <input type="number" name="duracion" value="<%= peli.duracion %>" required>
+          </label><br>
+
+          <div>
+            <label id="id_clasificacion">Clasificación</label><br>
+              <% if(clasificaciones_list.length > 0) { %>
+                <% clasificaciones_list.forEach((cl, i) => { %>
+
+                  <label>
+                    <%= cl.nombre %>
+                    <input type="radio" value="<%= cl.id_clasificacion %>" name="id_clasificacion"
+                    <%= cl.id_clasificacion == peli.id_clasificacion ? 'checked' : '' %>>
+                  </label><br>
+
+                <% }); %>
+              <% } else { %>
+                <p>No hay Clasificaciones para asignar</p>
+              <% } %>
+          </div>
+
+          <div>
+            <label id="categorias">Categorías</label><br>
+              <% if(categorias_list.length > 0) { %>
+                <% categorias_list.forEach((c, i) => { %>
+
+                  <label>
+                    <%= c.nombre %>
+                    <input type="checkbox" value="<%= c.id_categoria %>" name="categorias"
+                    <%= peli.categorias.some(peliCat => peliCat.id_categoria === c.id_categoria) ? 'checked' : '' %>>
+                  </label><br>
+
+                <% }); %>
+              <% } else { %>
+                <p>No hay Categorías para asignar</p>
+              <% } %>
+          </div>
+
+          <input type="submit" value="Guardar Cambios">
+      </form>
+    </main>
+</body>
+<%-include("../components/footer.ejs")%>

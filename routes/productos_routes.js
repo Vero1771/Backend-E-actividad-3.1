@@ -1,0 +1,68 @@
+var express = require('express');
+var router = express.Router();
+const Productos_Controller = require('../controllers/productos_controllers');
+
+/* (GET) Mostrar todos los productos */
+router.get('/mostrar', function (req, res, next) {
+  Productos_Controller.mostrar_productos()
+    .then(r => res.status(r.code).json(r))
+    .catch(err => res.status(err.code).json(err));
+});
+
+/* (GET) Mostrar productos por su ID */
+router.get('/buscar/:id', function (req, res, next) {
+  Productos_Controller.mostrar_productos_por_id(req.params.id)
+    .then(r => res.status(r.code).json(r))
+    .catch(err => res.status(err.code).json(err));
+});
+
+/* (POST) Ingresar productos */
+router.post('/ingresar', function (req, res, next) {
+  Productos_Controller.ingresar_producto(req.body)
+    .then(r => res.status(r.code).json(r))
+    .catch(err => res.status(err.code).json(err));
+});
+
+/* (PUT) Editar productos */
+router.put('/editar/:id', function (req, res, next) {
+  Productos_Controller.editar_producto(req.params.id, req.body)
+    .then(r => res.status(r.code).json(r))
+    .catch(err => res.status(err.code).json(err));
+});
+
+/* (DELETE) Eliminar productos por su ID */
+router.delete('/eliminar/:id', function (req, res, next) {
+  Productos_Controller.eliminar_producto(req.params.id)
+    .then(r => res.status(r.code).json(r))
+    .catch(err => res.status(err.code).json(err));
+});
+
+/* VIEWS EJS */
+
+/* (GET) */
+router.get('/', function (req, res, next) {
+  Productos_Controller.mostrar_productos()
+    .then((r) => {
+      res.render('./productos_views/productos', { title: 'Productos', productos_list: r.result });
+    })
+    .catch(err => res.status(err.code).json(err));
+});
+
+/* (POST) */
+router.get('/ingresar', function (req, res, next) {
+  res.render('./productos_views/ingresar_productos', { title: 'Productos' });
+});
+
+/* (PUT) Mostrar formulario de edición */
+router.get('/actualizar/:id', function (req, res, next) {
+  Productos_Controller.mostrar_productos_por_id(req.params.id)
+    .then((r) => {
+      res.render('./productos_views/editar_productos', {
+        title: 'Editar Producto',
+        product: r.result[0]
+      });
+    })
+    .catch(err => res.status(err.code).json(err));
+});
+
+module.exports = router;

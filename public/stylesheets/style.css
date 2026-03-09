@@ -1,0 +1,228 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Estilos del nav y el footer */
+
+nav, footer{
+  background-color: #000;
+  color: #fff;
+  padding: 15px;
+}
+
+nav ul {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  a {
+    text-decoration: none;
+    margin: 0 5px;
+    font-weight: bold;
+    color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+  }
+
+  a:hover {
+    color: #ff9900;
+  }
+
+}
+
+ul{
+  list-style-type: none; 
+}
+
+footer{
+  text-align: center;
+  margin-top: 5px;
+}
+
+/* Estilos del nav desplegable */
+
+.nav-list {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  background-color: #000;
+  padding: 10px;
+}
+
+.nav-list a, .nav-list span {
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.dropdown {
+  position: relative;
+}
+
+/* Ocultar el submenú por defecto */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #000;;
+  min-width: 160px;
+  list-style: none;
+  padding: 10px;
+  z-index: 1; /* Para que las opciones aparezcan encima de otros elementos */
+}
+
+/* Mostrar el submenú */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Estilo para los links dentro del desplegable */
+.dropdown-content li {
+  padding: 5px 0;
+}
+
+.dropdown-content a:hover {
+  color: #ff9900; 
+}
+
+/* Estilo de main */
+
+main{
+  margin: 25px;
+  flex: 1;
+}
+
+/* Estilos de las tablas */
+
+table {
+  width: 50%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  font-size: 0.9rem;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+thead {
+  background-color: #f0f0f0;
+
+  th {
+    padding: 10px 15px;
+    border-bottom: 2px solid #ccc;
+    color: #444;
+  }
+}
+
+tbody {
+  tr {
+    &:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    &:hover {
+      background-color: #f0f8ff;
+    }
+  }
+
+  td {
+    padding: 10px 15px;
+    border-bottom: 1px solid #eee;
+    white-space: nowrap;
+  }
+
+  td button {
+    margin: 10px;
+  }
+}
+
+/* Estilos de formularios */
+
+input[type="submit"] {
+  cursor: pointer;
+}
+
+.formEntidad {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 500px;
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.formEntidad label {
+  display: block;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.formEntidad input[type="text"],
+.formEntidad input[type="number"] {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box; 
+}
+
+.formEntidad input[type="submit"] {
+  background-color: #000;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  width: 100%;
+  font-size: 1rem;
+}
+
+.formEntidad input[type="submit"]:hover {
+  background-color: #333;
+}
+
+/* Estilos botonera */
+.botonera{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.botonera__opcion{
+  margin: 5px;
+}
+
+.opcion__editar{
+  text-decoration: none;
+  background-color: #000;
+  color: #fff;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.opcion__editar:hover {
+  background-color: #333;
+}
+
+.opcion__eliminar{
+  border: none;
+  background-color: #000;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+.opcion__eliminar:hover {
+  background-color: #333;
+}
+
+.in__line{
+  display: flex;
+  flex-direction: row;
+}

@@ -1,0 +1,54 @@
+<%-include("../components/head.ejs")%>
+  <body>
+
+    <%-include("../components/nav.ejs")%>
+    <main>
+      <h1><%= title %></h1>
+
+      <% if(peliculas_list.length <= 0) { %>
+        <h2>No hay películas registradas</h2>
+      <% }  %>
+
+      <table>
+          <thead>
+              <tr>
+                  <th>Título</th>
+                  <th>Año</th>
+                  <th>Duración</th>
+                  <th>Categorías</th>
+                  <th>Clasificación</th>
+                  <th>Administrar</th>
+              </tr>
+          </thead>
+          <tbody>
+              <% peliculas_list.forEach((peli, i) => { %>
+                  <tr>
+                      <td><%= peli.titulo %></td>
+                      <td><%= peli.anio %></td>
+                      <td><%= peli.duracion %></td>
+                      <td>
+                        <% peli.categorias.forEach((cat, e) => { %>
+
+                          <%if(e != 0){ %> , <% }%>
+
+                          <%=cat.nombre_categoria%>
+                          
+                        <% }); %>
+                      </td>
+                      <td><%= peli.clasificacion %></td>
+                      <td>    
+                        <div class="botonera">
+                          <a class="botonera__opcion opcion__editar" href="/peliculas/actualizar/<%= peli.id_pelicula %>" class="button">Editar</a>
+                          <form class="botonera__opcion" action="/peliculas/eliminar/<%= peli.id_pelicula %>/?_method=DELETE" method="post" onsubmit="return confirm('¿Estás seguro de eliminar esta película?');">
+                            <input class="opcion__eliminar" type="submit" class="button" value="X">
+                          </form>
+                        </div>
+                      </td>
+                  </tr>
+              <% }); %>
+          </tbody>
+      </table>
+    </main>
+  </body>
+
+<%-include("../components/footer.ejs")%>

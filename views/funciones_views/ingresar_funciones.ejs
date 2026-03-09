@@ -1,0 +1,63 @@
+<%-include("../components/head.ejs")%>
+
+  <body>
+
+    <%-include("../components/nav.ejs")%>
+    <main>
+      <h1>Ingresar <%= title %></h1>
+
+      <form class="formEntidad" action method="post">
+
+        <div>
+          <label for="id_pelicula">Elige una Película</label><br>
+          <% if(peliculas_list.length > 0) { %>
+            <select name="id_pelicula" id="id_pelicula" required>
+              <option value="" disabled selected>Selecciona una película...</option>
+              <% peliculas_list.forEach((p) => { %>
+                <option value="<%= p.id_pelicula %>">
+                  <%= p.titulo %>
+                </option>
+              <% }); %>
+            </select>
+          <% } else { %>
+            <p>No hay películas para asignar</p>
+          <% } %>
+        </div>
+
+        <br>
+
+        <div>
+          <label for="id_sala">Elige una Sala</label><br>
+          <% if(salas_list.length > 0) { %>
+            <select name="id_sala" id="id_sala" required>
+              <option value="" disabled selected>Selecciona una sala...</option>
+              <% salas_list.forEach((s) => { %>
+                <option value="<%= s.id_sala %>">
+                  <%= s.nombre %>
+                </option>
+              <% }); %>
+            </select>
+          <% } else { %>
+            <p>No hay salas para asignar</p>
+          <% } %>
+        </div>
+
+        <br>
+
+        <div>
+          <label for="fecha_hora">Fecha y Hora de la Función</label><br>
+          <input type="datetime-local" 
+                id="fecha_hora" 
+                name="fecha_hora" 
+                required>
+        </div>
+        
+        <br>
+
+        <input type="submit">
+
+      </form>
+    </main>
+  </body>
+
+  <%-include("../components/footer.ejs")%>

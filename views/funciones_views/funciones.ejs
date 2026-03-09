@@ -1,0 +1,44 @@
+<%-include("../components/head.ejs")%>
+  <body>
+
+    <%-include("../components/nav.ejs")%>
+
+    <main>
+      <h1><%= title %></h1>
+
+      <% if(funciones_list.length <= 0) { %>
+        <h2>No hay funciones registradas</h1>
+      <% }  %>
+
+      <table>
+          <thead>
+              <tr>
+                  <th>Película</th>
+                  <th>Sala</th>
+                  <th>Fecha y Hora</th>
+                  <th>Administrar</th>
+              </tr>
+          </thead>
+          <tbody>
+              <% funciones_list.forEach((f, i) => { %>
+                  <tr>
+                    <td><%= f.titulo %></td>
+                    <td><%= f.nombre %></td>
+                    <td><%= f.fecha_hora.toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' }) %></td>
+                    <td>    
+                      <div class="botonera">
+                        <a class="botonera__opcion opcion__editar" href="/funciones/actualizar/<%= f.id_funcion %>" class="button">Editar</a>
+                        <form class="botonera__opcion" action="/funciones/eliminar/<%= f.id_funcion %>/?_method=DELETE" method="post" onsubmit="return confirm('¿Estás seguro de eliminar esta función?');">
+                          <input class="opcion__eliminar" type="submit" class="button" value="X">
+                        </form>
+                      </div>
+                    </td>
+                  </tr>
+              <% }); %>
+          </tbody>
+      </table>
+    </main>
+
+  </body>
+
+<%-include("../components/footer.ejs")%>

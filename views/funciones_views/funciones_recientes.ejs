@@ -1,0 +1,35 @@
+<%-include("../components/head.ejs")%>
+  <body>
+
+    <%-include("../components/nav.ejs")%>
+
+    <main>
+      <h1>Las 5 <%= title %> más Recientes</h1>
+
+      <% if(funciones_list.length <= 0) { %>
+        <h2>No hay funciones registradas</h1>
+      <% }  %>
+
+      <table>
+          <thead>
+              <tr>
+                  <th>Película</th>
+                  <th>Sala</th>
+                  <th>Fecha y Hora</th>
+              </tr>
+          </thead>
+          <tbody>
+              <% funciones_list.forEach((f, i) => { %>
+                  <tr>
+                    <td><%= f.titulo %></td>
+                    <td><%= f.nombre %></td>
+                    <td><%= f.fecha_hora.toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' }) %></td>
+                  </tr>
+              <% }); %>
+          </tbody>
+      </table>
+    </main>
+
+  </body>
+
+<%-include("../components/footer.ejs")%>

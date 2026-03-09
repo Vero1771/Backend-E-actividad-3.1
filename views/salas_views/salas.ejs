@@ -1,0 +1,42 @@
+<%-include("../components/head.ejs")%>
+  <body>
+
+    <%-include("../components/nav.ejs")%>
+
+    <main>
+      <h1><%= title %></h1>
+
+      <% if(salas_list.length <= 0) { %>
+        <h2>No hay salas registradas</h1>
+      <% }  %>
+
+      <table>
+          <thead>
+              <tr>
+                  <th>Nombre</th>
+                  <th>Capacidad</th>
+                  <th>Administrar</th>
+              </tr>
+          </thead>
+          <tbody>
+              <% salas_list.forEach((s, i) => { %>
+                  <tr>
+                    <td><%= s.nombre %></td>
+                    <td><%= s.capacidad %></td>
+                    <td>    
+                      <div class="botonera">
+                        <a class="botonera__opcion opcion__editar" href="/salas/actualizar/<%= s.id_sala %>" class="button">Editar</a>
+                        <form class="botonera__opcion" action="/salas/eliminar/<%= s.id_sala %>/?_method=DELETE" method="post" onsubmit="return confirm('¿Estás seguro de eliminar esta sala?');">
+                          <input class="opcion__eliminar" type="submit" class="button" value="X">
+                        </form>
+                      </div>
+                    </td>
+                  </tr>
+              <% }); %>
+          </tbody>
+      </table>
+    </main>
+
+  </body>
+
+<%-include("../components/footer.ejs")%>

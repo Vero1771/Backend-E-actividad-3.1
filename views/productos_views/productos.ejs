@@ -1,0 +1,44 @@
+<%-include("../components/head.ejs")%>
+  <body>
+
+    <%-include("../components/nav.ejs")%>
+    <main>
+      <h1><%= title %></h1>
+
+      <% if(productos_list.length <= 0) { %>
+        <h2>No hay productos registrados</h2>
+      <% }  %>
+
+      <table>
+          <thead>
+              <tr>
+                  <th>Nombre</th>
+                  <th>Cantidad</th>
+                  <th>Precio Unitario</th>
+                  <th>En Stock</th>
+                  <th>Administrar</th>
+              </tr>
+          </thead>
+          <tbody>
+              <% productos_list.forEach((p, i) => { %>
+                  <tr>
+                      <td><%= p.nombre %></td>
+                      <td><%= p.cantidad %></td>
+                      <td><%= p.precio_unitario %></td>
+                      <td><%= p.en_stock %></td>
+                      <td>    
+                        <div class="botonera">
+                          <a class="botonera__opcion opcion__editar" href="/productos/actualizar/<%= p.id_producto %>" class="button">Editar</a>
+                          <form class="botonera__opcion" action="/productos/eliminar/<%= p.id_producto %>/?_method=DELETE" method="post" onsubmit="return confirm('¿Estás seguro de eliminar este producto?');">
+                            <input class="opcion__eliminar" type="submit" class="button" value="X">
+                          </form>
+                        </div>
+                      </td>
+                  </tr>
+              <% }); %>
+          </tbody>
+      </table>
+    </main>
+  </body>
+
+<%-include("../components/footer.ejs")%>

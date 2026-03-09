@@ -1,0 +1,24 @@
+<%-include("../components/head.ejs")%>
+
+  <body>
+    <%-include("../components/nav.ejs")%>
+      <main>
+        <h1><%= title %>: <%= sala.nombre %></h1>
+
+        <form class="formEntidad" action="/salas/editar/<%= sala.id_sala %>?_method=PUT"  method="post">
+
+          <label id="nombre">Nombre
+            <input type="text" name="nombre" value="<%= sala.nombre %>" required>
+          </label><br>
+
+          <label id="capacidad">Capacidad
+            <input type="number" name="capacidad" value="<%= sala.capacidad %>" required>
+          </label><br>
+
+          <input type="submit"  value="Guardar Cambios">
+
+        </form>
+      </main>
+  </body>
+
+  <%-include("../components/footer.ejs")%>

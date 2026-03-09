@@ -1,0 +1,67 @@
+<%-include("../components/head.ejs")%>
+
+  <body>
+
+    <%-include("../components/nav.ejs")%>
+    <main>
+      <h1><%= title %></h1>
+
+      <form class="formEntidad" action="/funciones/editar/<%= funcion.id_funcion %>?_method=PUT" method="post">
+
+        <div>
+          <label for="id_pelicula">Elige una Película</label><br>
+          <% if(peliculas_list.length > 0) { %>
+            <select name="id_pelicula" id="id_pelicula" required>
+              <% peliculas_list.forEach((p) => { %>
+                <option value="<%= p.id_pelicula %>" 
+                  <%= p.id_pelicula == funcion.id_pelicula ? 'selected' : '' %>>
+                  <%= p.titulo %>
+                </option>
+              <% }); %>
+            </select>
+          <% } %>
+        </div>
+
+        <br>
+
+        <div>
+          <label for="id_sala">Elige una Sala</label><br>
+          <% if(salas_list.length > 0) { %>
+            <select name="id_sala" id="id_sala" required>
+              <% salas_list.forEach((s) => { %>
+                <option value="<%= s.id_sala %>"
+                  <%= s.id_sala == funcion.id_sala ? 'selected' : '' %>>
+                  <%= s.nombre %>
+                </option>
+              <% }); %>
+            </select>
+          <% } %>
+        </div>
+
+        <br>
+
+        <div>
+          <label for="fecha_hora">Fecha y Hora de la Función</label><br>
+          <% 
+            const fechaObjeto = new Date(funcion.fecha_hora);
+            
+            fechaObjeto.setMinutes(fechaObjeto.getMinutes() - fechaObjeto.getTimezoneOffset());
+              
+            const fechaFormateada = fechaObjeto.toISOString().slice(0, 16);
+          %>
+          <input type="datetime-local" 
+                id="fecha_hora" 
+                name="fecha_hora"
+                value="<%= fechaFormateada %>" 
+                required>
+        </div>
+              
+        <br>
+
+        <input type="submit"  value="Guardar Cambios">
+
+      </form>
+    </main>
+  </body>
+
+  <%-include("../components/footer.ejs")%>

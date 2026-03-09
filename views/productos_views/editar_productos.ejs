@@ -1,0 +1,41 @@
+<%-include("../components/head.ejs")%>
+<body>
+  <%-include("../components/nav.ejs")%>
+  <main>
+      <h1><%= title %>: <%= product.nombre %></h1>
+
+      <form class="formEntidad" action="/productos/editar/<%= product.id_producto %>?_method=PUT" method="post">
+
+          <label id="nombre">Nombre
+            <input type="text" name="nombre" value="<%= product.nombre %>" required>
+          </label><br>
+
+          <label id="cantidad">Cantidad
+            <input type="number" name="cantidad" value="<%= product.cantidad %>" required>
+          </label><br>
+
+          <label id="precio_unitario">Precio Unitario$
+            <input type="number" step="0.01" name="precio_unitario" value="<%= product.precio_unitario %>" required>
+          </label><br>
+
+          <label id="en_stock">
+            <p>¿Está en stock?</p>
+            <div class="in__line">
+              <label for="si">Sí</label>
+
+              <input type="radio" id="si" name="en_stock" value="1"
+              <%= product.en_stock == 1 ? 'checked' : '' %>>
+
+              <label for="no">No</label>
+
+              <input type="radio" id="no" name="en_stock" value="0"
+              <%= product.en_stock == 0 ? 'checked' : '' %>>
+
+            </div>
+          </label><br>
+
+          <input type="submit" value="Guardar Cambios">
+      </form>
+    </main>
+</body>
+<%-include("../components/footer.ejs")%>
