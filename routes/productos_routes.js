@@ -9,6 +9,13 @@ router.get('/mostrar', function (req, res, next) {
     .catch(err => res.status(err.code).json(err));
 });
 
+/* (GET) Mostrar productos en stock */
+router.get('/en_stock', function (req, res, next) {
+  Productos_Controller.mostrar_productos_en_stock()
+    .then(r => res.status(r.code).json(r))
+    .catch(err => res.status(err.code).json(err));
+});
+
 /* (GET) Mostrar productos por su ID */
 router.get('/buscar/:id', function (req, res, next) {
   Productos_Controller.mostrar_productos_por_id(req.params.id)

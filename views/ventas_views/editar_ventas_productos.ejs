@@ -1,0 +1,38 @@
+<%-include("../components/head.ejs")%>
+
+  <body>
+    <%-include("../components/nav.ejs")%>
+      <main>
+        <h1><%= title %>: <%= venta.id_venta_producto %></h1>
+
+        <form class="formEntidad" action="/ventas_productos/editar/<%= venta.id_venta_producto %>?_method=PUT"  method="post">
+
+          <div class="row">
+            <label>Producto:</label>
+            <select id="id_producto" name="id_producto">
+              <% productos_list.forEach((p) => { %>
+                <option value="<%= p.id_producto %>"
+                  <%= p.id_producto == venta.id_producto ? 'selected' : '' %>>
+                  <%= p.nombre %>
+                </option>
+              <% }); %>
+            </select>
+          </div>
+
+          <br>
+
+          <label id="cantidad">Cantidad
+            <input type="number" name="cantidad" value="<%= venta.cantidad %>" required>
+          </label><br>
+
+          <label id="subtotal">SubTotal
+            <input type="number" step="0.01" name="subtotal" value="<%= venta.precio_unitario %>" required>
+          </label><br>
+
+           <input type="submit"  value="Guardar Cambios">
+
+        </form>
+      </main>
+  </body>
+
+  <%-include("../components/footer.ejs")%>

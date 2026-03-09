@@ -43,7 +43,7 @@
         <div>
           <label for="fecha_hora">Fecha y Hora de la Función</label><br>
           <% 
-            const fechaObjeto = new Date(funcion.fecha_hora);
+            const fechaObjeto = new Date(venta.fecha);
             
             fechaObjeto.setMinutes(fechaObjeto.getMinutes() - fechaObjeto.getTimezoneOffset());
               

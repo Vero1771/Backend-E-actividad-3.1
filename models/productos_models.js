@@ -29,6 +29,17 @@ class ProductosModel {
         );
     });
   }
+  static mostrar_productos_en_stock() {
+    return new Promise((resolve, reject) => {
+      pool.query('SELECT * FROM `productos` WHERE productos.en_stock = 1;')
+        .then(([rows]) => {
+          resolve({ code: 200, message: "consulta completada con éxito", result: rows })
+        })
+        .catch(err =>
+          reject({ code: 500, message: err.message, result: [err] })
+        );
+    });
+  }
   static mostrar_productos_por_id(id) {
     return new Promise((resolve, reject) => {
       pool.query('SELECT * FROM `productos` WHERE id_producto = ?', id)

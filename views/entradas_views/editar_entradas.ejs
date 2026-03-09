@@ -1,0 +1,55 @@
+<%-include("../components/head.ejs")%>
+
+  <body>
+
+    <%-include("../components/nav.ejs")%>
+    <main>
+      <h1><%= title %> <%= entrada.id_entrada %></h1>
+
+      <form class="formEntidad" action="/entradas/editar/<%= entrada.id_entrada %>?_method=PUT" method="POST">
+        <label>Venta Origen: #<%= entrada.id_venta %></label>
+        
+        <div>
+          <label for="id_funcion">Elige una Función</label><br>
+          <% if(funciones_list.length > 0) { %>
+            <select name="id_funcion" id="id_funcion" required>
+              <% funciones_list.forEach((f) => { %>
+                <option value="<%= f.id_funcion %>" 
+                  <%= f.id_funcion == entrada.id_funcion ? 'selected' : '' %>>
+                  <%= f.titulo %> - <%= f.fecha_hora.toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' }) %>
+                </option>
+              <% }); %>
+            </select>
+          <% } %>
+        </div>
+
+        <br>
+
+        <div>
+          <label for="id_asiento">Elige un Asiento</label><br>
+          <% if(asientos_list.length > 0) { %>
+            <select name="id_asiento" id="id_asiento" required>
+              <% asientos_list.forEach((a) => { %>
+                <option value="<%= a.id_asiento %>" 
+                  <%= a.id_asiento == entrada.id_asiento ? 'selected' : '' %>>
+                  <%= a.nombre %>
+                </option>
+              <% }); %>
+            </select>
+          <% } %>
+        </div>
+
+        <br>
+
+        <label for="precio">Precio Cobrado:</label>
+        <input type="number" step="0.01" name="precio" value="<%= entrada.precio %>">
+
+        <br>
+
+        <input type="submit" value="Guardar Cambios">
+      </form>
+     
+    </main>
+  </body>
+
+  <%-include("../components/footer.ejs")%>

@@ -1,0 +1,54 @@
+<%-include("../components/head.ejs")%>
+  <body>
+
+    <%-include("../components/nav.ejs")%>
+
+    <main>
+      <h1><%= title %></h1>
+
+      <% if(ventas_list.length <= 0) { %>
+        <h2>No hay ventas registradas</h1>
+      <% }  %>
+
+      <table>
+          <thead>
+              <tr>
+                  <th>Número de Venta</th>
+                  <th>Número de Venta Individual</th>
+                  <th>Método de Pago</th>
+                  <th>Fecha</th>
+                  <th>Producto</th>
+                  <th>Cantidad</th>
+                  <th>SubTotal</th>
+                  <th>Total</th>
+                  <th>Administrar</th>
+              </tr>
+          </thead>
+          <tbody>
+              <% ventas_list.forEach((v, i) => { %>
+                  <tr>
+                    <td><%= v.id_venta %></td>
+                    <td><%= v.id_venta_producto %></td>
+                    <td><%= v.metodo_pago %></td>
+                    <td><%= v.fecha.toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' }) %></td>
+                    <td><%= v.producto %></td>
+                    <td><%= v.cantidad %></td>
+                    <td><%= v.precio_unitario %></td>
+                    <td><%= v.total %></td>
+                    <td>    
+                      <div class="botonera">
+                        <a class="botonera__opcion opcion__editar" href="/ventas_productos/actualizar/<%= v.id_venta_producto %>" class="button">Editar</a>
+                        <form class="botonera__opcion" action="/ventas_productos/eliminar/<%= v.id_venta_producto %>/?_method=DELETE" method="post" onsubmit="return confirm('¿Estás seguro de eliminar esta venta?');">
+                          <input class="opcion__eliminar" type="submit" class="button" value="X">
+                        </form>
+                      </div>
+                    </td>
+                  </tr>
+              <% }); %>
+          </tbody>
+      </table>
+    </main>
+
+  </body>
+
+<%-include("../components/footer.ejs")%>

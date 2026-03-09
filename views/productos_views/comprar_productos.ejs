@@ -1,0 +1,121 @@
+<%-include("../components/head.ejs")%>
+
+  <body>
+    <%-include("../components/nav.ejs")%>
+    <main>
+      <h1><%= title %></h1>
+
+      <div class="container">
+        <div class="row">
+          <label>Método de Pago:</label>
+          <select id="id_metodo">
+            <% metodos_pago_list.forEach(m => { %>
+              <option value="<%= m.id_metodo %>"><%= m.nombre %></option>
+            <% }) %>
+          </select>
+        </div>
+
+        <div id="lista-productos">
+          <h3>Elegir Productos</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% productos_list.forEach((p) => { %>
+                <tr class="producto-fila" 
+                    data-id="<%= p.id_producto %>" 
+                    data-precio="<%= p.precio_unitario %>">
+                  <td><%= p.nombre %></td>
+                  <td>$<%= p.precio_unitario %></td>
+                  <td>
+                    <input type="number" class="cantidad-input" value="0" min="0" 
+                          style="width: 60px;" onchange="calcularSubtotal(this)">
+                  </td>
+                  <td>
+                    $<span class="subtotal-texto">0.00</span>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+          <h4>Total Venta: $<span id="total-general">0.00</span></h4>
+          <button type="button" onclick="enviarVenta()">Finalizar Venta de Productos</button>
+        </div>
+      </div>
+
+
+      <script>
+       function calcularSubtotal(input) {
+        const fila = input.closest('.producto-fila');
+        const precio = parseFloat(fila.dataset.precio);
+        const cantidad = parseInt(input.value) || 0;
+          
+        const subtotal = precio * cantidad;
+        fila.querySelector('.subtotal-texto').innerText = subtotal.toFixed(2);
+          
+        actualizarTotalGeneral();
+      }
+
+      function actualizarTotalGeneral() {
+        let total = 0;
+        document.querySelectorAll('.subtotal-texto').forEach(span => {
+          total += parseFloat(span.innerText);
+        });
+        document.getElementById('total-general').innerText = total.toFixed(2);
+      }
+
+      async function enviarVenta() {
+        const id_metodo = document.getElementById('id_metodo').value;
+        const productosParaEnviar = [];
+
+          // Verificar los productos que tienen una cantidad
+          document.querySelectorAll('.producto-fila').forEach(fila => {
+            const cantidad = parseInt(fila.querySelector('.cantidad-input').value);
+            if (cantidad > 0) {
+              productosParaEnviar.push({
+                id_producto: parseInt(fila.dataset.id),
+                cantidad: cantidad,
+                subtotal: parseFloat(fila.querySelector('.subtotal-texto').innerText)
+              });
+            }
+          });
+
+          if (productosParaEnviar.length === 0) {
+            return alert("Selecciona al menos un producto con cantidad mayor a 0");
+          }
+
+          const data = {
+            id_metodo: parseInt(id_metodo),
+            productos: productosParaEnviar
+          };
+
+          try {
+            const response = await fetch('/ventas_productos/ingresar', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+              alert("Venta de productos exitosa!");
+              window.location.reload();
+            } else {
+              alert("Error: " + result.message);
+            }
+          } catch (error) {
+            console.error("Error:", error);
+          }
+      }
+      </script>
+
+    </main>
+  </body>
+
+  <%-include("../components/footer.ejs")%>

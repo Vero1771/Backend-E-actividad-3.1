@@ -4,6 +4,9 @@ class ProductosController {
   static mostrar_productos() {
     return Productos_Model.mostrar_productos().then(r => r).catch(err => err);
   }
+  static mostrar_productos_en_stock() {
+    return Productos_Model.mostrar_productos_en_stock().then(r => r).catch(err => err);
+  }
   static mostrar_productos_por_id(id) {
     return Productos_Model.mostrar_productos_por_id(id).then(r => r).catch(err => err);
   }
