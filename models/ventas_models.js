@@ -83,7 +83,7 @@ class VentasModel {
 
       const { inicio, fin } = rango;
 
-      pool.query('SELECT ventas.id_venta, ventas.id_metodo, metodos_pago.nombre AS "metodo_de_pago" , ventas.fecha, ventas.total FROM `ventas` JOIN `metodos_pago` ON metodos_pago.id_metodo = ventas.id_metodo  WHERE `fecha` BETWEEN ? AND ? ORDER BY `ventas`.`id_venta` ASC', [inicio, fin])
+      pool.query('SELECT ventas.id_venta, ventas.id_metodo, metodos_pago.nombre AS "metodo_de_pago" , ventas.fecha, ventas.total FROM `ventas` JOIN `metodos_pago` ON metodos_pago.id_metodo = ventas.id_metodo  WHERE `fecha` BETWEEN ? AND ? ORDER BY `ventas`.`fecha` ASC', [inicio, fin])
         .then(([rows]) => {
           if (rows.length > 0) {
             resolve({ code: 200, message: "consulta completada con éxito", result: rows })

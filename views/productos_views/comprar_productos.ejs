@@ -5,7 +5,7 @@
     <main>
       <h1><%= title %></h1>
 
-      <div class="container">
+      <div class="formEntidad">
         <div class="row">
           <label>Método de Pago:</label>
           <select id="id_metodo">
@@ -20,6 +20,7 @@
           <table class="table">
             <thead>
               <tr>
+                <th>ID</th>
                 <th>Producto</th>
                 <th>Precio</th>
                 <th>Cantidad</th>
@@ -31,6 +32,7 @@
                 <tr class="producto-fila" 
                     data-id="<%= p.id_producto %>" 
                     data-precio="<%= p.precio_unitario %>">
+                  <td><%= p.id_producto %></td>
                   <td><%= p.nombre %></td>
                   <td>$<%= p.precio_unitario %></td>
                   <td>
@@ -45,7 +47,7 @@
             </tbody>
           </table>
           <h4>Total Venta: $<span id="total-general">0.00</span></h4>
-          <button type="button" onclick="enviarVenta()">Finalizar Venta de Productos</button>
+          <button class="formEntidad__submit" type="button" onclick="enviarVenta()">Finalizar Venta de Productos</button>
         </div>
       </div>
 

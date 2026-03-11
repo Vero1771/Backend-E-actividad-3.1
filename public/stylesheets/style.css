@@ -157,7 +157,7 @@ input[type="submit"] {
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-.formEntidad label {
+.formEntidad label{
   display: block;
   margin-bottom: 15px;
   font-weight: bold;
@@ -174,7 +174,7 @@ input[type="submit"] {
   box-sizing: border-box; 
 }
 
-.formEntidad input[type="submit"] {
+.formEntidad input[type="submit"], .formEntidad__submit {
   background-color: #000;
   color: white;
   padding: 10px 20px;
@@ -184,8 +184,9 @@ input[type="submit"] {
   font-size: 1rem;
 }
 
-.formEntidad input[type="submit"]:hover {
+.formEntidad input[type="submit"]:hover, .formEntidad__submit:hover {
   background-color: #333;
+  cursor: pointer;
 }
 
 /* Estilos botonera */
@@ -225,4 +226,13 @@ input[type="submit"] {
 .in__line{
   display: flex;
   flex-direction: row;
+}
+
+/* Estilos listas de checkbox */
+.check__list{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap; 
+  gap: 10px; 
+  max-width: 100%;
 }

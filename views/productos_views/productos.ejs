@@ -12,6 +12,7 @@
       <table>
           <thead>
               <tr>
+                  <th>ID</th>
                   <th>Nombre</th>
                   <th>Cantidad</th>
                   <th>Precio Unitario</th>
@@ -22,6 +23,7 @@
           <tbody>
               <% productos_list.forEach((p, i) => { %>
                   <tr>
+                      <td><%= p.id_producto %></td>
                       <td><%= p.nombre %></td>
                       <td><%= p.cantidad %></td>
                       <td><%= p.precio_unitario %></td>

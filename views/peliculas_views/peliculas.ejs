@@ -12,6 +12,7 @@
       <table>
           <thead>
               <tr>
+                  <th>ID</th>
                   <th>Título</th>
                   <th>Año</th>
                   <th>Duración</th>
@@ -23,6 +24,7 @@
           <tbody>
               <% peliculas_list.forEach((peli, i) => { %>
                   <tr>
+                      <td><%= peli.id_pelicula %></td>
                       <td><%= peli.titulo %></td>
                       <td><%= peli.anio %></td>
                       <td><%= peli.duracion %></td>

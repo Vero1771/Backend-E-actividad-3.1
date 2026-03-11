@@ -13,6 +13,7 @@
       <table>
           <thead>
               <tr>
+                  <th>ID</th>
                   <th>Película</th>
                   <th>Sala</th>
                   <th>Asiento</th>
@@ -26,6 +27,7 @@
           <tbody>
               <% entradas_list.forEach((e, i) => { %>
                   <tr>
+                    <td><%= e.id_entrada %></td>
                     <td><%= e.pelicula %></td>
                     <td><%= e.sala %></td>
                     <td><%= e.asiento %></td>
