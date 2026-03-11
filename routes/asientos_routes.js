@@ -4,23 +4,23 @@ const Asientos_Controller = require('../controllers/asientos_controllers');
 
 /* (GET) Mostrar todos los asientos */
 router.get('/mostrar', (req, res) => {
-	Asientos_Controller.mostrar_asientos()
-		.then(r => res.status(r.code).json(r))
-		.catch(err => res.status(err.code).json(err));
+  Asientos_Controller.mostrar_asientos()
+    .then(r => res.status(r.code).json(r))
+    .catch(err => res.status(err.code).json(err));
 });
 
 /* (GET) Buscar un asiento por su ID */
 router.get('/buscar/:id', (req, res) => {
-	Asientos_Controller.mostrar_asientos_por_id(req.params.id)
-		.then(r => res.status(r.code).json(r))
-		.catch(err => res.status(err.code).json(err));
+  Asientos_Controller.mostrar_asientos_por_id(req.params.id)
+    .then(r => res.status(r.code).json(r))
+    .catch(err => res.status(err.code).json(err));
 });
 
 /* (POST) Ingresar asientos */
 router.post('/ingresar', (req, res) => {
-	Asientos_Controller.ingresar_asiento(req.body)
-		.then(r => res.status(r.code).json(r))
-		.catch(err => res.status(err.code).json(err));
+  Asientos_Controller.ingresar_asiento(req.body)
+    .then(r => res.status(r.code).json(r))
+    .catch(err => res.status(err.code).json(err));
 });
 
 /* (PUT) Editar asientos */
@@ -45,7 +45,13 @@ router.get('/', function (req, res, next) {
     .then((r) => {
       res.render('./asientos_views/asientos', { title: 'Asientos', asientos_list: r.result });
     })
-    .catch(err => res.status(err.code).json(err));
+    .catch(err => {
+      res.status(500).render('error', {
+        title: 'Error del Servidor',
+        code: 500,
+        message: 'No pudimos conectar con la base de datos'
+      });
+    });
 });
 
 /* (POST) */
@@ -57,12 +63,28 @@ router.get('/ingresar', function (req, res, next) {
 router.get('/actualizar/:id', function (req, res, next) {
   Asientos_Controller.mostrar_asientos_por_id(req.params.id)
     .then((r) => {
+
+      if (r.code === 404) {
+        return res.status(404).render('error', {
+          title: 'Asiento no encontrado',
+          code: 404,
+          message: r.message
+        });
+      }
+
       res.render('./asientos_views/editar_asientos', {
         title: 'Editar Asiento',
         asiento: r.result[0]
       });
+
     })
-    .catch(err => res.status(err.code).json(err));
+    .catch(err => {
+      res.status(500).render('error', {
+        title: 'Error del Servidor',
+        code: 500,
+        message: 'No pudimos conectar con la base de datos'
+      });
+    });
 });
 
 module.exports = router;

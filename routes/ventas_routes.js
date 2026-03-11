@@ -53,7 +53,13 @@ router.get('/', function (req, res, next) {
     .then((r) => {
       res.render('./ventas_views/ventas', { title: 'Ventas', ventas_list: r.result });
     })
-    .catch(err => res.status(err.code).json(err));
+    .catch(err => {
+      res.status(500).render('error', {
+        title: 'Error del Servidor',
+        code: 500,
+        message: 'No pudimos conectar con la base de datos'
+      });
+    });
 });
 
 /* (GET) Vista de ventas filtradas por rango */
@@ -91,15 +97,36 @@ router.get('/actualizar/:id', function (req, res, next) {
     .then((metodos_pago) => {
       Ventas_Controller.mostrar_ventas_por_id(req.params.id)
         .then((r) => {
+
+          if (r.code === 404) {
+            return res.status(404).render('error', {
+              title: 'Venta no encontrada',
+              code: 404,
+              message: r.message
+            });
+          }
+
           res.render('./ventas_views/editar_ventas', {
             title: 'Editar Venta',
             metodos_pago_list: metodos_pago.result,
             venta: r.result[0]
           });
         })
-        .catch(err => res.status(err.code).json(err));
+        .catch(err => {
+          res.status(500).render('error', {
+            title: 'Error del Servidor',
+            code: 500,
+            message: 'No pudimos conectar con la base de datos'
+          });
+        });
     })
-    .catch(err => res.status(err.code).json(err));
+    .catch(err => {
+      res.status(500).render('error', {
+        title: 'Error del Servidor',
+        code: 500,
+        message: 'No pudimos conectar con la base de datos'
+      });
+    });
 });
 
 module.exports = router;

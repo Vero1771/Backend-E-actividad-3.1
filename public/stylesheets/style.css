@@ -236,3 +236,15 @@ input[type="submit"] {
   gap: 10px; 
   max-width: 100%;
 }
+
+/* Estilos vistas de error */
+
+.error__h1{
+  font-size: 4rem; 
+  color: #e74c3c;
+}
+
+.error__p{
+  color: #666; 
+  font-size: 1.2rem;
+}

@@ -55,7 +55,13 @@ router.get('/', function (req, res, next) {
     .then((r) => {
       res.render('./funciones_views/funciones', { title: 'Funciones', funciones_list: r.result });
     })
-    .catch(err => res.status(err.code).json(err));
+    .catch(err => {
+      res.status(500).render('error', {
+        title: 'Error del Servidor',
+        code: 500,
+        message: 'No pudimos conectar con la base de datos'
+      });
+    });
 });
 
 /* (GET) 5 Funciones Recientes */
@@ -64,7 +70,13 @@ router.get('/recientes', function (req, res, next) {
     .then((r) => {
       res.render('./funciones_views/funciones_recientes', { title: 'Funciones', funciones_list: r.result });
     })
-    .catch(err => res.status(err.code).json(err));
+    .catch(err => {
+      res.status(500).render('error', {
+        title: 'Error del Servidor',
+        code: 500,
+        message: 'No pudimos conectar con la base de datos'
+      });
+    });
 });
 
 /* (POST) */
@@ -82,9 +94,21 @@ router.get('/ingresar', function (req, res, next) {
             }
           );
         })
-        .catch(err => res.status(err.code).json(err));
+        .catch(err => {
+          res.status(500).render('error', {
+            title: 'Error del Servidor',
+            code: 500,
+            message: 'No pudimos conectar con la base de datos'
+          });
+        });
     })
-    .catch(err => res.status(err.code).json(err));
+    .catch(err => {
+      res.status(500).render('error', {
+        title: 'Error del Servidor',
+        code: 500,
+        message: 'No pudimos conectar con la base de datos'
+      });
+    });
 });
 
 /* (PUT) Mostrar formulario de edición */
@@ -95,6 +119,15 @@ router.get('/actualizar/:id', function (req, res, next) {
         .then((pelis) => {
           Salas_Controller.mostrar_salas()
             .then((salas) => {
+
+              if (funcion.code === 404) {
+                return res.status(404).render('error', {
+                  title: 'Función no encontrada',
+                  code: 404,
+                  message: funcion.message
+                });
+              }
+
               res.render(
                 './funciones_views/editar_funciones',
                 {
@@ -104,12 +137,31 @@ router.get('/actualizar/:id', function (req, res, next) {
                   funcion: funcion.result[0]
                 }
               );
+
             })
-            .catch(err => res.status(err.code).json(err));
+            .catch(err => {
+              res.status(500).render('error', {
+                title: 'Error del Servidor',
+                code: 500,
+                message: 'No pudimos conectar con la base de datos'
+              });
+            });
         })
-        .catch(err => res.status(err.code).json(err));
+        .catch(err => {
+          res.status(500).render('error', {
+            title: 'Error del Servidor',
+            code: 500,
+            message: 'No pudimos conectar con la base de datos'
+          });
+        });
     })
-    .catch(err => res.status(err.code).json(err));
+    .catch(err => {
+      res.status(500).render('error', {
+        title: 'Error del Servidor',
+        code: 500,
+        message: 'No pudimos conectar con la base de datos'
+      });
+    });
 });
 
 

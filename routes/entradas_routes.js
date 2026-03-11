@@ -51,7 +51,13 @@ router.get('/', function (req, res, next) {
     .then((r) => {
       res.render('./entradas_views/entradas', { title: 'Entradas', entradas_list: r.result });
     })
-    .catch(err => res.status(err.code).json(err));
+    .catch(err => {
+      res.status(500).render('error', {
+        title: 'Error del Servidor',
+        code: 500,
+        message: 'No pudimos conectar con la base de datos'
+      });
+    });
 });
 
 /* (POST) */
@@ -69,11 +75,29 @@ router.get('/ingresar', function (req, res, next) {
                 metodos_pago_list: metodos_pago.result,
               });
             })
-            .catch(err => res.status(err.code).json(err));
+            .catch(err => {
+              res.status(500).render('error', {
+                title: 'Error del Servidor',
+                code: 500,
+                message: 'No pudimos conectar con la base de datos'
+              });
+            });
         })
-        .catch(err => res.status(err.code).json(err));
+        .catch(err => {
+          res.status(500).render('error', {
+            title: 'Error del Servidor',
+            code: 500,
+            message: 'No pudimos conectar con la base de datos'
+          });
+        });
     })
-    .catch(err => res.status(err.code).json(err));
+    .catch(err => {
+      res.status(500).render('error', {
+        title: 'Error del Servidor',
+        code: 500,
+        message: 'No pudimos conectar con la base de datos'
+      });
+    });
 });
 
 /* (PUT) Mostrar formulario de edición */
@@ -84,18 +108,46 @@ router.get('/actualizar/:id', function (req, res, next) {
         .then((asientos) => {
           Entradas_Controller.mostrar_entradas_por_id(req.params.id)
             .then((r) => {
+
+              if (r.code === 404) {
+                return res.status(404).render('error', {
+                  title: 'Entrada no encontrada',
+                  code: 404,
+                  message: r.message
+                });
+              }
+
               res.render('./entradas_views/editar_entradas', {
                 title: 'Editar Entrada',
                 funciones_list: funciones.result,
                 asientos_list: asientos.result,
                 entrada: r.result[0]
               });
+
             })
-            .catch(err => res.status(err.code).json(err));
+            .catch(err => {
+              res.status(500).render('error', {
+                title: 'Error del Servidor',
+                code: 500,
+                message: 'No pudimos conectar con la base de datos'
+              });
+            });
         })
-        .catch(err => res.status(err.code).json(err));
+        .catch(err => {
+          res.status(500).render('error', {
+            title: 'Error del Servidor',
+            code: 500,
+            message: 'No pudimos conectar con la base de datos'
+          });
+        });
     })
-    .catch(err => res.status(err.code).json(err));
+    .catch(err => {
+      res.status(500).render('error', {
+        title: 'Error del Servidor',
+        code: 500,
+        message: 'No pudimos conectar con la base de datos'
+      });
+    });
 });
 
 module.exports = router;

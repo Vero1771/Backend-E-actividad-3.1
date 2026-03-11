@@ -4,23 +4,23 @@ const Salas_Controller = require('../controllers/salas_controllers');
 
 /* (GET) Mostrar todas las salas */
 router.get('/mostrar', (req, res) => {
-	Salas_Controller.mostrar_salas()
-		.then(r => res.status(r.code).json(r))
-		.catch(err => res.status(err.code).json(err));
+  Salas_Controller.mostrar_salas()
+    .then(r => res.status(r.code).json(r))
+    .catch(err => res.status(err.code).json(err));
 });
 
 /* (GET) Buscar una sala por su ID */
 router.get('/buscar/:id', (req, res) => {
-	Salas_Controller.mostrar_salas_por_id(req.params.id)
-		.then(r => res.status(r.code).json(r))
-		.catch(err => res.status(err.code).json(err));
+  Salas_Controller.mostrar_salas_por_id(req.params.id)
+    .then(r => res.status(r.code).json(r))
+    .catch(err => res.status(err.code).json(err));
 });
 
 /* (POST) Ingresar salas */
 router.post('/ingresar', (req, res) => {
-	Salas_Controller.ingresar_sala(req.body)
-		.then(r => res.status(r.code).json(r))
-		.catch(err => res.status(err.code).json(err));
+  Salas_Controller.ingresar_sala(req.body)
+    .then(r => res.status(r.code).json(r))
+    .catch(err => res.status(err.code).json(err));
 });
 
 /* (PUT) Editar salas */
@@ -45,7 +45,13 @@ router.get('/', function (req, res, next) {
     .then((r) => {
       res.render('./salas_views/salas', { title: 'Salas', salas_list: r.result });
     })
-    .catch(err => res.status(err.code).json(err));
+    .catch(err => {
+      res.status(500).render('error', {
+        title: 'Error del Servidor',
+        code: 500,
+        message: 'No pudimos conectar con la base de datos'
+      });
+    });
 });
 
 /* (POST) */
@@ -57,12 +63,27 @@ router.get('/ingresar', function (req, res, next) {
 router.get('/actualizar/:id', function (req, res, next) {
   Salas_Controller.mostrar_salas_por_id(req.params.id)
     .then((r) => {
+
+      if (r.code === 404) {
+        return res.status(404).render('error', {
+          title: 'Sala no encontrada',
+          code: 404,
+          message: r.message
+        });
+      }
+
       res.render('./salas_views/editar_salas', {
         title: 'Editar Sala',
         sala: r.result[0]
       });
     })
-    .catch(err => res.status(err.code).json(err));
+    .catch(err => {
+      res.status(500).render('error', {
+        title: 'Error del Servidor',
+        code: 500,
+        message: 'No pudimos conectar con la base de datos'
+      });
+    });
 });
 
 module.exports = router;

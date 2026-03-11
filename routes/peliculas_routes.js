@@ -52,7 +52,13 @@ router.get('/', function (req, res, next) {
     .then((r) => {
       res.render('./peliculas_views/peliculas', { title: 'Películas', peliculas_list: r.result });
     })
-    .catch(err => res.status(err.code).json(err));
+    .catch(err => {
+      res.status(500).render('error', {
+        title: 'Error del Servidor',
+        code: 500,
+        message: 'No pudimos conectar con la base de datos'
+      });
+    });
 });
 
 /* (POST) */
@@ -70,9 +76,21 @@ router.get('/ingresar', function (req, res, next) {
             }
           );
         })
-        .catch(err => res.status(err.code).json(err));
+        .catch(err => {
+          res.status(500).render('error', {
+            title: 'Error del Servidor',
+            code: 500,
+            message: 'No pudimos conectar con la base de datos'
+          });
+        });
     })
-    .catch(err => res.status(err.code).json(err));
+    .catch(err => {
+      res.status(500).render('error', {
+        title: 'Error del Servidor',
+        code: 500,
+        message: 'No pudimos conectar con la base de datos'
+      });
+    });
 });
 
 /* (PUT) Mostrar formulario de edición */
@@ -83,6 +101,15 @@ router.get('/actualizar/:id', function (req, res, next) {
         .then((categorias) => {
           Clasificaciones_Controller.mostrar_clasificaciones()
             .then((clasificaciones) => {
+
+              if (p.code === 404) {
+                return res.status(404).render('error', {
+                  title: 'Película no encontrada',
+                  code: 404,
+                  message: p.message
+                });
+              }
+
               res.render(
                 './peliculas_views/editar_peliculas',
                 {
@@ -92,12 +119,31 @@ router.get('/actualizar/:id', function (req, res, next) {
                   clasificaciones_list: clasificaciones.result
                 }
               );
+
             })
-            .catch(err => res.status(err.code).json(err));
+            .catch(err => {
+              res.status(500).render('error', {
+                title: 'Error del Servidor',
+                code: 500,
+                message: 'No pudimos conectar con la base de datos'
+              });
+            });
         })
-        .catch(err => res.status(err.code).json(err));
+        .catch(err => {
+          res.status(500).render('error', {
+            title: 'Error del Servidor',
+            code: 500,
+            message: 'No pudimos conectar con la base de datos'
+          });
+        });
     })
-    .catch(err => res.status(err.code).json(err));
+    .catch(err => {
+      res.status(500).render('error', {
+        title: 'Error del Servidor',
+        code: 500,
+        message: 'No pudimos conectar con la base de datos'
+      });
+    });
 });
 
 module.exports = router;

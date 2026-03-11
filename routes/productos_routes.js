@@ -52,7 +52,13 @@ router.get('/', function (req, res, next) {
     .then((r) => {
       res.render('./productos_views/productos', { title: 'Productos', productos_list: r.result });
     })
-    .catch(err => res.status(err.code).json(err));
+    .catch(err => {
+      res.status(500).render('error', {
+        title: 'Error del Servidor',
+        code: 500,
+        message: 'No pudimos conectar con la base de datos'
+      });
+    });
 });
 
 /* (POST) */
@@ -64,12 +70,27 @@ router.get('/ingresar', function (req, res, next) {
 router.get('/actualizar/:id', function (req, res, next) {
   Productos_Controller.mostrar_productos_por_id(req.params.id)
     .then((r) => {
+      
+      if (r.code === 404) {
+        return res.status(404).render('error', {
+          title: 'Producto no encontrado',
+          code: 404,
+          message: r.message
+        });
+      }
+
       res.render('./productos_views/editar_productos', {
         title: 'Editar Producto',
         product: r.result[0]
       });
     })
-    .catch(err => res.status(err.code).json(err));
+    .catch(err => {
+      res.status(500).render('error', {
+        title: 'Error del Servidor',
+        code: 500,
+        message: 'No pudimos conectar con la base de datos'
+      });
+    });
 });
 
 module.exports = router;
