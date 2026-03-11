@@ -70,7 +70,7 @@ class EntradasModel {
   }
   static _calcularTotalVenta(entradas) {
     let total = 0;
-    
+
     entradas.forEach((entrada) => {
       total += entrada.precio;
     })
@@ -120,6 +120,22 @@ class EntradasModel {
           throw { code: 400, message: "Datos de venta inválidos", result: errores };
         }
 
+        // No vender asientos duplicados para la misma función
+        const asientosSet = new Set(entradas.map(e => `${e.id_funcion}-${e.id_asiento}`));
+        if (asientosSet.size !== entradas.length) {
+          throw { code: 400, message: "No puedes vender el mismo asiento varias veces en el mismo pedido" };
+        }
+
+        for (const e of entradas) {
+          const [existente] = await connection.query(
+            'SELECT id_entrada FROM entradas WHERE id_funcion = ? AND id_asiento = ?',
+            [e.id_funcion, e.id_asiento]
+          );
+          if (existente.length > 0) {
+            throw { code: 400, message: `El asiento ${e.id_asiento} ya está ocupado para la función ${e.id_funcion}` };
+          }
+        }
+
         // Calcular el total
         venta.total = EntradasModel._calcularTotalVenta(entradas);
 
@@ -152,22 +168,37 @@ class EntradasModel {
     });
   }
   static editar_entrada(id, actualizar) {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
+
       const error = EntradasModel._validarDatosEntrada(actualizar);
       if (error.length > 0) {
         reject({ code: 400, message: "Ha ocurrido un problema al ingresar los datos", result: error })
         return;
       }
-      pool.query('UPDATE `entradas` SET ? WHERE `id_entrada`= ?', [actualizar, id])
-        .then(([rows]) => {
-          if (rows.affectedRows > 0) {
-            resolve({ code: 200, message: "consulta completada con éxito", result: [rows] })
+
+      try {
+        // Evitar que se registre el mismo asiento en la misma función
+        if (actualizar.id_funcion && actualizar.id_asiento) {
+          const [ocupado] = await pool.query(
+            'SELECT id_entrada FROM entradas WHERE id_funcion = ? AND id_asiento = ? AND id_entrada != ?',
+            [actualizar.id_funcion, actualizar.id_asiento, id]
+          );
+
+          if (ocupado.length > 0) {
+            return reject({ code: 400, message: "El asiento seleccionado ya está ocupado en esa función" });
           }
-          resolve({ code: 404, message: "no hay entradas registradas con ese ID", result: rows })
-        })
-        .catch(err =>
-          reject({ code: 500, message: err.message, result: [err] })
-        );
+        }
+
+        // Proceder con el UPDATE
+        const [rows] = await pool.query('UPDATE `entradas` SET ? WHERE `id_entrada`= ?', [actualizar, id]);
+        if (rows.affectedRows > 0) {
+          resolve({ code: 200, message: "consulta completada con éxito", result: [rows] })
+        }
+        resolve({ code: 404, message: "no hay entradas registradas con ese ID", result: rows })
+
+      } catch (err) {
+        reject({ code: 500, message: err.message });
+      }
     });
   }
   static eliminar_entrada(id) {
