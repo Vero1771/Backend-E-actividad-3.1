@@ -1,0 +1,20 @@
+<%-include("../components/head.ejs")%>
+
+  <body>
+    <%-include("../components/nav.ejs")%>
+      <main>
+        <h1><%= title %>: <%= categoria.nombre %></h1>
+
+        <form class="formEntidad" action="/categorias/editar/<%= categoria.id_categoria %>?_method=PUT"  method="post">
+
+          <label id="nombre">Nombre
+            <input type="text" name="nombre" value="<%= categoria.nombre %>" required>
+          </label><br>
+
+          <input type="submit"  value="Guardar Cambios">
+
+        </form>
+      </main>
+  </body>
+
+  <%-include("../components/footer.ejs")%>

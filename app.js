@@ -14,6 +14,10 @@ var ventasRouter = require('./routes/ventas_routes');
 var productosRouter = require('./routes/productos_routes');
 var entradasRouter = require('./routes/entradas_routes');
 var ventasProductosRouter = require('./routes/ventas_productos_routes');
+var asientosRouter = require('./routes/asientos_routes');
+var categoriasRouter = require('./routes/categorias_routes');
+var clasificacionesRouter = require('./routes/clasificaciones_routes');
+var metodosPagoRouter = require('./routes/metodos_pagos_routes');
 
 var app = express();
 
@@ -37,6 +41,10 @@ app.use('/ventas', ventasRouter);
 app.use('/productos', productosRouter);
 app.use('/entradas', entradasRouter);
 app.use('/ventas_productos', ventasProductosRouter);
+app.use('/asientos', asientosRouter);
+app.use('/categorias', categoriasRouter);
+app.use('/clasificaciones', clasificacionesRouter);
+app.use('/metodos', metodosPagoRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

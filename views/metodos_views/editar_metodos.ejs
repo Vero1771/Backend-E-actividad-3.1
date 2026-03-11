@@ -1,0 +1,20 @@
+<%-include("../components/head.ejs")%>
+
+  <body>
+    <%-include("../components/nav.ejs")%>
+      <main>
+        <h1><%= title %>: <%= metodo.nombre %></h1>
+
+        <form class="formEntidad" action="/metodos/editar/<%= metodo.id_metodo %>?_method=PUT"  method="post">
+
+          <label id="nombre">Nombre
+            <input type="text" name="nombre" value="<%= metodo.nombre %>" required>
+          </label><br>
+
+          <input type="submit"  value="Guardar Cambios">
+
+        </form>
+      </main>
+  </body>
+
+  <%-include("../components/footer.ejs")%>

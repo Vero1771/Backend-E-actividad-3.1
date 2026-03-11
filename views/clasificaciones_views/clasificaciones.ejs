@@ -1,0 +1,40 @@
+<%-include("../components/head.ejs")%>
+  <body>
+
+    <%-include("../components/nav.ejs")%>
+    <main>
+      <h1><%= title %></h1>
+
+      <% if(clasificaciones_list.length <= 0) { %>
+        <h2>No hay clasificaciones registradas</h2>
+      <% }  %>
+
+      <table>
+          <thead>
+              <tr>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th>Administrar</th>
+              </tr>
+          </thead>
+          <tbody>
+              <% clasificaciones_list.forEach((c, i) => { %>
+                  <tr>
+                      <td><%= c.id_clasificacion %></td>
+                      <td><%= c.nombre %></td>
+                      <td>    
+                        <div class="botonera">
+                          <a class="botonera__opcion opcion__editar" href="/clasificaciones/actualizar/<%= c.id_clasificacion %>" class="button">Editar</a>
+                          <form class="botonera__opcion" action="/clasificaciones/eliminar/<%= c.id_clasificacion %>/?_method=DELETE" method="post" onsubmit="return confirm('¿Estás seguro de eliminar esta clasificación?');">
+                            <input class="opcion__eliminar" type="submit" class="button" value="X">
+                          </form>
+                        </div>
+                      </td>
+                  </tr>
+              <% }); %>
+          </tbody>
+      </table>
+    </main>
+  </body>
+
+<%-include("../components/footer.ejs")%>
