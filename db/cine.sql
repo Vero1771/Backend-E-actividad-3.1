@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 28-02-2026 a las 03:44:10
+-- Tiempo de generación: 13-03-2026 a las 23:28:01
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -355,6 +355,27 @@ INSERT INTO `salas` (`id_sala`, `nombre`, `capacidad`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `usuarios`
+--
+
+CREATE TABLE `usuarios` (
+  `id_usuario` int(11) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `rol` enum('admin','user') NOT NULL DEFAULT 'user'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `usuarios`
+--
+
+INSERT INTO `usuarios` (`id_usuario`, `email`, `password`, `rol`) VALUES
+(1, 'admin', '$2b$10$D2k/5ZVKofkoc6BwqUlHsuN3qZj7a8DkqJ1BSk6ElmLNDa3Lu92qm', 'admin'),
+(2, 'user', '$2b$10$F7sWz0XQF.NamuPmwFVNGO/uF7774wyyHbfENJlkP8KBe1Y1j4772', 'user');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `ventas`
 --
 
@@ -362,30 +383,31 @@ CREATE TABLE `ventas` (
   `id_venta` int(11) NOT NULL,
   `id_metodo` int(11) DEFAULT NULL,
   `fecha` datetime DEFAULT NULL,
-  `total` decimal(10,2) DEFAULT NULL
+  `total` decimal(10,2) DEFAULT NULL,
+  `id_usuario` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `ventas`
 --
 
-INSERT INTO `ventas` (`id_venta`, `id_metodo`, `fecha`, `total`) VALUES
-(1, 1, '2023-10-01 17:50:00', 50.00),
-(2, 2, '2023-10-02 19:45:00', 37.50),
-(3, 3, '2023-10-03 19:20:00', 25.00),
-(4, 1, '2023-10-04 16:50:00', 12.50),
-(5, 2, '2023-10-05 20:50:00', 75.00),
-(6, 3, '2023-10-06 14:45:00', 50.00),
-(7, 1, '2023-10-07 18:50:00', 62.50),
-(8, 2, '2023-10-08 18:20:00', 37.50),
-(9, 3, '2023-10-09 19:50:00', 25.00),
-(10, 1, '2023-10-10 18:45:00', 100.00),
-(11, 2, '2023-10-11 17:20:00', 50.00),
-(12, 1, '2026-01-01 17:50:00', 20.00),
-(13, 2, '2026-01-02 19:45:00', 4.00),
-(14, 3, '2026-01-03 19:20:00', 40.00),
-(15, 1, '2026-01-04 16:50:00', 10.00),
-(16, 2, '2026-01-05 20:50:00', 20.00);
+INSERT INTO `ventas` (`id_venta`, `id_metodo`, `fecha`, `total`, `id_usuario`) VALUES
+(1, 1, '2023-10-01 17:50:00', 50.00, NULL),
+(2, 2, '2023-10-02 19:45:00', 37.50, NULL),
+(3, 3, '2023-10-03 19:20:00', 25.00, NULL),
+(4, 1, '2023-10-04 16:50:00', 12.50, NULL),
+(5, 2, '2023-10-05 20:50:00', 75.00, NULL),
+(6, 3, '2023-10-06 14:45:00', 50.00, NULL),
+(7, 1, '2023-10-07 18:50:00', 62.50, NULL),
+(8, 2, '2023-10-08 18:20:00', 37.50, NULL),
+(9, 3, '2023-10-09 19:50:00', 25.00, NULL),
+(10, 1, '2023-10-10 18:45:00', 100.00, NULL),
+(11, 2, '2023-10-11 17:20:00', 50.00, NULL),
+(12, 1, '2026-01-01 17:50:00', 20.00, NULL),
+(13, 2, '2026-01-02 19:45:00', 4.00, NULL),
+(14, 3, '2026-01-03 19:20:00', 40.00, NULL),
+(15, 1, '2026-01-04 16:50:00', 10.00, NULL),
+(16, 2, '2026-01-05 20:50:00', 20.00, NULL);
 
 -- --------------------------------------------------------
 
@@ -485,11 +507,18 @@ ALTER TABLE `salas`
   ADD PRIMARY KEY (`id_sala`);
 
 --
+-- Indices de la tabla `usuarios`
+--
+ALTER TABLE `usuarios`
+  ADD PRIMARY KEY (`id_usuario`);
+
+--
 -- Indices de la tabla `ventas`
 --
 ALTER TABLE `ventas`
   ADD PRIMARY KEY (`id_venta`),
-  ADD KEY `id_metodo` (`id_metodo`);
+  ADD KEY `id_metodo` (`id_metodo`),
+  ADD KEY `ventas_ibfk_2` (`id_usuario`);
 
 --
 -- Indices de la tabla `ventas_productos`
@@ -564,6 +593,12 @@ ALTER TABLE `salas`
   MODIFY `id_sala` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
+-- AUTO_INCREMENT de la tabla `usuarios`
+--
+ALTER TABLE `usuarios`
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT de la tabla `ventas`
 --
 ALTER TABLE `ventas`
@@ -611,7 +646,8 @@ ALTER TABLE `peliculas_categorias`
 -- Filtros para la tabla `ventas`
 --
 ALTER TABLE `ventas`
-  ADD CONSTRAINT `ventas_ibfk_1` FOREIGN KEY (`id_metodo`) REFERENCES `metodos_pago` (`id_metodo`);
+  ADD CONSTRAINT `ventas_ibfk_1` FOREIGN KEY (`id_metodo`) REFERENCES `metodos_pago` (`id_metodo`),
+  ADD CONSTRAINT `ventas_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `ventas_productos`
