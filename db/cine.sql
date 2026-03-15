@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-03-2026 a las 23:28:01
+-- Tiempo de generación: 15-03-2026 a las 21:58:25
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -370,8 +370,8 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id_usuario`, `email`, `password`, `rol`) VALUES
-(1, 'admin', '$2b$10$D2k/5ZVKofkoc6BwqUlHsuN3qZj7a8DkqJ1BSk6ElmLNDa3Lu92qm', 'admin'),
-(2, 'user', '$2b$10$F7sWz0XQF.NamuPmwFVNGO/uF7774wyyHbfENJlkP8KBe1Y1j4772', 'user');
+(1, 'admin@gmail.com', '$2b$10$D2k/5ZVKofkoc6BwqUlHsuN3qZj7a8DkqJ1BSk6ElmLNDa3Lu92qm', 'admin'),
+(2, 'user@gmail.com', '$2b$10$F7sWz0XQF.NamuPmwFVNGO/uF7774wyyHbfENJlkP8KBe1Y1j4772', 'user');
 
 -- --------------------------------------------------------
 

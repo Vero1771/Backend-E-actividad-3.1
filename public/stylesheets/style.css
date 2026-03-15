@@ -164,6 +164,8 @@ input[type="submit"] {
 }
 
 .formEntidad input[type="text"],
+.formEntidad input[type="email"],
+.formEntidad input[type="password"],
 .formEntidad input[type="number"] {
   display: block;
   width: 100%;
