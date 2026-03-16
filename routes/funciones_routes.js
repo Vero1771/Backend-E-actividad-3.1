@@ -3,6 +3,7 @@ var router = express.Router();
 const Funciones_Controller = require('../controllers/funciones_controllers');
 const Peliculas_Controller = require('../controllers/peliculas_controllers');
 const Salas_Controller = require('../controllers/salas_controllers');
+const { checkLoginAdmin } = require('../auth/auth');
 
 /* (GET) Mostrar todas las funciones */
 router.get('/mostrar', (req, res) => {
@@ -26,21 +27,21 @@ router.get('/funciones_recientes', (req, res) => {
 });
 
 /* (POST) Ingresar funciones */
-router.post('/ingresar', function (req, res, next) {
+router.post('/ingresar', checkLoginAdmin, function (req, res, next) {
   Funciones_Controller.ingresar_funcion(req.body)
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));
 });
 
 /* (PUT) Editar funciones */
-router.put('/editar/:id', function (req, res, next) {
+router.put('/editar/:id', checkLoginAdmin, function (req, res, next) {
   Funciones_Controller.editar_funcion(req.params.id, req.body)
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));
 });
 
 /* (DELETE) Eliminar funciones por su ID */
-router.delete('/eliminar/:id', function (req, res, next) {
+router.delete('/eliminar/:id', checkLoginAdmin, function (req, res, next) {
   Funciones_Controller.eliminar_funcion(req.params.id)
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));

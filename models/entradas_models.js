@@ -88,9 +88,20 @@ class EntradasModel {
         );
     });
   }
+  static mostrar_entradas_no_vendidas() {
+    return new Promise((resolve, reject) => {
+      pool.query('SELECT entradas.id_entrada, entradas.id_venta, peliculas.titulo As "pelicula", salas.nombre As "sala", asientos.id_asiento, asientos.nombre As "asiento", funciones.id_funcion, funciones.fecha_hora As "fecha_funcion", entradas.precio FROM `entradas` JOIN `funciones` ON entradas.id_funcion = funciones.id_funcion JOIN `peliculas` ON peliculas.id_pelicula = funciones.id_pelicula JOIN `salas` ON salas.id_sala = funciones.id_sala JOIN `asientos` ON entradas.id_asiento = asientos.id_asiento WHERE entradas.id_venta IS NULL ORDER BY entradas.id_entrada;')
+        .then(([rows]) => {
+          resolve({ code: 200, message: "consulta completada con éxito", result: rows })
+        })
+        .catch(err =>
+          reject({ code: 500, message: err.message, result: [err] })
+        );
+    });
+  }
   static mostrar_entradas_por_id(id) {
     return new Promise((resolve, reject) => {
-      pool.query('SELECT entradas.id_entrada, peliculas.titulo As "pelicula", salas.nombre As "sala", asientos.id_asiento, asientos.nombre As "asiento", funciones.id_funcion, funciones.fecha_hora As "fecha_funcion", ventas.id_venta, ventas.fecha As "fecha_venta", entradas.precio FROM `entradas` JOIN `funciones` ON entradas.id_funcion = funciones.id_funcion JOIN `peliculas` ON peliculas.id_pelicula = funciones.id_pelicula JOIN `salas` ON salas.id_sala = funciones.id_sala JOIN `asientos` ON entradas.id_asiento = asientos.id_asiento JOIN `ventas` ON entradas.id_venta = ventas.id_venta WHERE id_entrada = ?', id)
+      pool.query('SELECT entradas.id_entrada, entradas.id_venta, peliculas.titulo As "pelicula", salas.nombre As "sala", asientos.id_asiento, asientos.nombre As "asiento", funciones.id_funcion, funciones.fecha_hora As " fecha_funcion", entradas.precio FROM `entradas` JOIN `funciones` ON entradas.id_funcion = funciones.id_funcion JOIN `peliculas` ON peliculas.id_pelicula = funciones.id_pelicula JOIN `salas` ON salas.id_sala = funciones.id_sala JOIN `asientos` ON entradas.id_asiento = asientos.id_asiento WHERE id_entrada = ?', id)
         .then(([rows]) => {
           if (rows.length > 0) {
             resolve({ code: 200, message: "consulta completada con éxito", result: rows })
@@ -102,22 +113,17 @@ class EntradasModel {
         );
     });
   }
-  static ingresar_entradas(venta, entradas) {
+  static ingresar_entradas(entradas) {
     return new Promise(async (resolve, reject) => {
       let connection;
       try {
         connection = await pool.getConnection();
         await connection.beginTransaction();
 
-        // Obtener la fecha actual
-        venta.fecha = new Date();
-
         // Validar datos 
-        const error1 = EntradasModel._validarDatosVenta(venta);
-        const error2 = EntradasModel._validarDatosEntradas(entradas);
-        const errores = [...error1, ...error2];
-        if (errores.length > 0) {
-          throw { code: 400, message: "Datos de venta inválidos", result: errores };
+        const errors = EntradasModel._validarDatosEntradas(entradas);
+        if (errors.length > 0) {
+          throw { code: 400, message: "Datos de entradas inválidos", result: errors };
         }
 
         // No vender asientos duplicados para la misma función
@@ -136,25 +142,60 @@ class EntradasModel {
           }
         }
 
-        // Calcular el total
-        venta.total = EntradasModel._calcularTotalVenta(entradas);
-
-        // Insertar la venta principal
-        const [resVenta] = await connection.query('INSERT INTO ventas SET ?', venta);
-        const idVenta = resVenta.insertId;
-
         // Ingresar las entradas
         const valoresEntradas = entradas.map(e => [
-          idVenta,
+          null,
           e.id_funcion,
           e.id_asiento,
           e.precio
         ]);
 
+
         await connection.query(
           'INSERT INTO entradas (id_venta, id_funcion, id_asiento, precio) VALUES ?',
           [valoresEntradas]
         );
+
+        await connection.commit();
+        resolve({ code: 201, message: "Entradas registradas con éxito", result: [entradas] });
+
+      } catch (err) {
+        if (connection) await connection.rollback();
+        reject({ code: 500, message: err.message });
+      } finally {
+        if (connection) connection.release();
+      }
+    });
+  }
+  static vender_entradas(venta, entradas) {
+    return new Promise(async (resolve, reject) => {
+      let connection;
+      try {
+        connection = await pool.getConnection();
+        await connection.beginTransaction();
+
+        venta.fecha = new Date();
+
+        const errors = EntradasModel._validarDatosVenta(venta);
+        if (errors.length > 0) {
+          throw { code: 400, message: "Datos de venta inválidos", result: errors };
+        }
+
+        venta.total = EntradasModel._calcularTotalVenta(entradas);
+
+        //Crear la venta principal
+        const [resVenta] = await connection.query('INSERT INTO ventas SET ?', venta);
+        const idVenta = resVenta.insertId;
+
+        // Actualizar el ID de ventas de las entradas 
+        const promesasActualizacion = entradas.map(e => {
+          return connection.query(
+            'UPDATE `entradas` SET `id_venta` = ? WHERE `id_entrada` = ?',
+            [idVenta, e.id_entrada]
+          );
+        });
+
+        await Promise.all(promesasActualizacion);
 
         await connection.commit();
         resolve({ code: 201, message: "Entradas vendidas con éxito", result: { id_venta: idVenta } });

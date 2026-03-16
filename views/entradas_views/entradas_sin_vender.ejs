@@ -1,0 +1,50 @@
+<%-include("../components/head.ejs")%>
+  <body>
+
+    <%-include("../components/nav.ejs")%>
+
+    <main>
+      <h1><%= title %></h1>
+
+      <% if(entradas_list.length <= 0) { %>
+        <h2>No hay entradas registradas</h1>
+      <% }  %>
+
+      <table>
+          <thead>
+              <tr>
+                  <th>ID</th>
+                  <th>Película</th>
+                  <th>Sala</th>
+                  <th>Asiento</th>
+                  <th>Fecha Función</th>
+                  <th>Precio</th>
+                  <th>Administrar</th>
+              </tr>
+          </thead>
+          <tbody>
+              <% entradas_list.forEach((e, i) => { %>
+                  <tr>
+                    <td><%= e.id_entrada %></td>
+                    <td><%= e.pelicula %></td>
+                    <td><%= e.sala %></td>
+                    <td><%= e.asiento %></td>
+                    <td><%= e.fecha_funcion.toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' }) %></td>
+                    <td><%= e.precio %></td>
+                    <td>    
+                      <div class="botonera">
+                        <a class="botonera__opcion opcion__editar" href="/entradas/actualizar/<%= e.id_entrada %>" class="button">Editar</a>
+                        <form class="botonera__opcion" action="/entradas/eliminar/<%= e.id_entrada %>/?_method=DELETE" method="post" onsubmit="return confirm('¿Estás seguro de eliminar esta entrada?');">
+                          <input class="opcion__eliminar" type="submit" class="button" value="X">
+                        </form>
+                      </div>
+                    </td>
+                  </tr>
+              <% }); %>
+          </tbody>
+      </table>
+    </main>
+
+  </body>
+
+<%-include("../components/footer.ejs")%>

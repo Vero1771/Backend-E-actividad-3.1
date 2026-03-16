@@ -4,11 +4,18 @@ const Entradas_Controller = require('../controllers/entradas_controllers');
 const Funciones_Controller = require('../controllers/funciones_controllers');
 const Asientos_Controller = require('../controllers/asientos_controllers');
 const Metodos_Pagos_Controller = require('../controllers/metodos_pagos_controllers');
+const { checkLoginUser, checkLoginAdmin } = require('../auth/auth');
 
 /* (GET) Mostrar todas las entradas */
-
 router.get('/mostrar', (req, res) => {
   Entradas_Controller.mostrar_entradas()
+    .then(r => res.status(r.code).json(r))
+    .catch(err => res.status(err.code).json(err));
+});
+
+/* (GET) Mostrar todas las entradas sin vender */
+router.get('/no_vendidas', (req, res) => {
+  Entradas_Controller.mostrar_entradas_no_vendidas()
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));
 });
@@ -21,23 +28,32 @@ router.get('/buscar/:id', (req, res) => {
 });
 
 /* (POST) Ingresar entradas */
-router.post('/ingresar', (req, res) => {
+router.post('/ingresar', checkLoginAdmin, (req, res) => {
+  const { entradas = [] } = req.body;
+  Entradas_Controller.ingresar_entradas(entradas)
+    .then(r => res.status(r.code).json(r))
+    .catch(err => res.status(err.code).json(err))
+});
+
+
+/* (PUT) Vender entradas */
+router.put('/vender', checkLoginUser, (req, res) => {
   const { entradas = [], ...datosVenta } = req.body;
 
-  Entradas_Controller.ingresar_entradas(datosVenta, entradas)
+  Entradas_Controller.vender_entradas(datosVenta, entradas)
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err))
 });
 
 /* (PUT) Editar entradas */
-router.put('/editar/:id', function (req, res, next) {
+router.put('/editar/:id', checkLoginAdmin, function (req, res, next) {
   Entradas_Controller.editar_entrada(req.params.id, req.body)
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));
 });
 
 /* (DELETE) Eliminar entradas por su ID */
-router.delete('/eliminar/:id', function (req, res, next) {
+router.delete('/eliminar/:id', checkLoginAdmin, function (req, res, next) {
   Entradas_Controller.eliminar_entrada(req.params.id)
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));
@@ -45,11 +61,26 @@ router.delete('/eliminar/:id', function (req, res, next) {
 
 /* VIEWS EJS */
 
-/* (GET) Todas las salas */
+/* (GET) Todas las entradas */
 router.get('/', function (req, res, next) {
   Entradas_Controller.mostrar_entradas()
     .then((r) => {
       res.render('./entradas_views/entradas', { title: 'Entradas', entradas_list: r.result });
+    })
+    .catch(err => {
+      res.status(500).render('error', {
+        title: 'Error del Servidor',
+        code: 500,
+        message: 'No pudimos conectar con la base de datos'
+      });
+    });
+});
+
+/* (GET) Entradas sin vender */
+router.get('/sin_vender', function (req, res, next) {
+  Entradas_Controller.mostrar_entradas_no_vendidas()
+    .then((r) => {
+      res.render('./entradas_views/entradas_sin_vender', { title: 'Entradas sin Vender', entradas_list: r.result });
     })
     .catch(err => {
       res.status(500).render('error', {
@@ -66,22 +97,40 @@ router.get('/ingresar', function (req, res, next) {
     .then((funciones) => {
       Asientos_Controller.mostrar_asientos()
         .then((asientos) => {
-          Metodos_Pagos_Controller.mostrar_metodos_pago()
-            .then((metodos_pago) => {
-              res.render('./entradas_views/ingresar_entradas', {
-                title: 'Entradas',
-                funciones_list: funciones.result,
-                asientos_list: asientos.result,
-                metodos_pago_list: metodos_pago.result,
-              });
-            })
-            .catch(err => {
-              res.status(500).render('error', {
-                title: 'Error del Servidor',
-                code: 500,
-                message: 'No pudimos conectar con la base de datos'
-              });
-            });
+          res.render('./entradas_views/ingresar_entradas', {
+            title: 'Entradas',
+            funciones_list: funciones.result,
+            asientos_list: asientos.result
+          });
+        })
+        .catch(err => {
+          res.status(500).render('error', {
+            title: 'Error del Servidor',
+            code: 500,
+            message: 'No pudimos conectar con la base de datos'
+          });
+        });
+    })
+    .catch(err => {
+      res.status(500).render('error', {
+        title: 'Error del Servidor',
+        code: 500,
+        message: 'No pudimos conectar con la base de datos'
+      });
+    });
+});
+
+/* (PUT) Comprar entradas */
+router.get('/comprar', function (req, res, next) {
+  Entradas_Controller.mostrar_entradas_no_vendidas()
+    .then((productos) => {
+      Metodos_Pagos_Controller.mostrar_metodos_pago()
+        .then((metodos_pago) => {
+          res.render('./entradas_views/comprar_entradas', {
+            title: 'Comprar Entradas',
+            entradas_list: productos.result,
+            metodos_pago_list: metodos_pago.result,
+          });
         })
         .catch(err => {
           res.status(500).render('error', {

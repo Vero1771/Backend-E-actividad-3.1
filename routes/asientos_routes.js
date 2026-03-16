@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const Asientos_Controller = require('../controllers/asientos_controllers');
+const { checkLoginAdmin } = require('../auth/auth');
 
 /* (GET) Mostrar todos los asientos */
 router.get('/mostrar', (req, res) => {
@@ -17,21 +18,21 @@ router.get('/buscar/:id', (req, res) => {
 });
 
 /* (POST) Ingresar asientos */
-router.post('/ingresar', (req, res) => {
+router.post('/ingresar', checkLoginAdmin, (req, res) => {
   Asientos_Controller.ingresar_asiento(req.body)
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));
 });
 
 /* (PUT) Editar asientos */
-router.put('/editar/:id', function (req, res, next) {
+router.put('/editar/:id', checkLoginAdmin, function (req, res, next) {
   Asientos_Controller.editar_asiento(req.params.id, req.body)
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));
 });
 
 /* (DELETE) Eliminar asientos por su ID */
-router.delete('/eliminar/:id', function (req, res, next) {
+router.delete('/eliminar/:id', checkLoginAdmin, function (req, res, next) {
   Asientos_Controller.eliminar_asiento(req.params.id)
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));

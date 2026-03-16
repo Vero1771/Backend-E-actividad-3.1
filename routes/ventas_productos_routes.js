@@ -3,6 +3,7 @@ var router = express.Router();
 const Ventas_Productos_Controller = require('../controllers/ventas_productos_controllers');
 const Productos_Controller = require('../controllers/productos_controllers');
 const Metodos_Pagos_Controller = require('../controllers/metodos_pagos_controllers');
+const { checkLoginUser, checkLoginAdmin } = require('../auth/auth');
 
 /* (GET) Mostrar todos los productos vendidos */
 router.get('/mostrar', function (req, res, next) {
@@ -19,7 +20,7 @@ router.get('/buscar/:id', (req, res) => {
 });
 
 /* (POST) Ingresar productos vendidos */
-router.post('/ingresar', function (req, res, next) {
+router.post('/ingresar', checkLoginUser, function (req, res, next) {
   const { productos = [], ...datosVenta } = req.body;
 
   Ventas_Productos_Controller.ingresar_producto_vendido(datosVenta, productos)
@@ -28,14 +29,14 @@ router.post('/ingresar', function (req, res, next) {
 });
 
 /* (PUT) Editar productos vendidos  */
-router.put('/editar/:id', function (req, res, next) {
+router.put('/editar/:id', checkLoginAdmin, function (req, res, next) {
   Ventas_Productos_Controller.editar_producto_vendido(req.params.id, req.body)
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));
 });
 
 /* (DELETE) Eliminar productos vendidos por su ID */
-router.delete('/eliminar/:id', function (req, res, next) {
+router.delete('/eliminar/:id', checkLoginAdmin, function (req, res, next) {
   Ventas_Productos_Controller.eliminar_producto_vendido(req.params.id)
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));

@@ -4,11 +4,17 @@ class EntradasController {
   static mostrar_entradas() {
     return Entradas_Model.mostrar_entradas().then(r => r).catch(err => err);
   }
+  static mostrar_entradas_no_vendidas() {
+    return Entradas_Model.mostrar_entradas_no_vendidas().then(r => r).catch(err => err);
+  }
   static mostrar_entradas_por_id(id) {
     return Entradas_Model.mostrar_entradas_por_id(id).then(r => r).catch(err => err);
   }
-  static ingresar_entradas(venta, entradas) {
-    return Entradas_Model.ingresar_entradas(venta, entradas).then(r => r).catch(err => err);
+  static ingresar_entradas(entradas) {
+    return Entradas_Model.ingresar_entradas(entradas).then(r => r).catch(err => err);
+  }
+  static vender_entradas(venta, entradas) {
+    return Entradas_Model.vender_entradas(venta, entradas).then(r => r).catch(err => err);
   }
   static editar_entrada(id, actualizar) {
     return Entradas_Model.editar_entrada(id, actualizar).then(r => r).catch(err => err);

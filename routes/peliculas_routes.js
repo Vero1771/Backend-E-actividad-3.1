@@ -3,6 +3,7 @@ var router = express.Router();
 const Peliculas_Controller = require('../controllers/peliculas_controllers');
 const Categorias_Controller = require('../controllers/categorias_controllers');
 const Clasificaciones_Controller = require('../controllers/clasificaciones_controllers');
+const { checkLoginAdmin } = require('../auth/auth');
 
 /* (GET) Mostrar todas las películas */
 router.get('/mostrar', function (req, res, next) {
@@ -19,7 +20,7 @@ router.get('/buscar/:id', function (req, res, next) {
 });
 
 /* (POST) Ingresar películas */
-router.post('/ingresar', function (req, res, next) {
+router.post('/ingresar', checkLoginAdmin, function (req, res, next) {
   const { categorias = [], ...datosPelicula } = req.body;
 
   Peliculas_Controller.ingresar_pelicula(datosPelicula, categorias)
@@ -28,7 +29,7 @@ router.post('/ingresar', function (req, res, next) {
 });
 
 /* (PUT) Editar películas */
-router.put('/editar/:id', function (req, res, next) {
+router.put('/editar/:id', checkLoginAdmin, function (req, res, next) {
   const { categorias, ...datosPelicula } = req.body;
   const id = req.params.id;
   Peliculas_Controller.editar_pelicula(id, datosPelicula, categorias)
@@ -38,7 +39,7 @@ router.put('/editar/:id', function (req, res, next) {
 });
 
 /* (DELETE) Eliminar películas por su ID */
-router.delete('/eliminar/:id', function (req, res, next) {
+router.delete('/eliminar/:id', checkLoginAdmin, function (req, res, next) {
   Peliculas_Controller.eliminar_pelicula(req.params.id)
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));

@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const Categorias_Controller = require('../controllers/categorias_controllers');
+const { checkLoginAdmin } = require('../auth/auth');
 
 /* (GET) Mostrar todas los categorías */
 router.get('/mostrar', (req, res) => {
@@ -17,21 +18,21 @@ router.get('/buscar/:id', (req, res) => {
 });
 
 /* (POST) Ingresar categorías */
-router.post('/ingresar', (req, res) => {
+router.post('/ingresar', checkLoginAdmin, (req, res) => {
   Categorias_Controller.ingresar_categoria(req.body)
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));
 });
 
 /* (PUT) Editar categorías */
-router.put('/editar/:id', function (req, res, next) {
+router.put('/editar/:id', checkLoginAdmin, function (req, res, next) {
   Categorias_Controller.editar_categoria(req.params.id, req.body)
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));
 });
 
 /* (DELETE) Eliminar categorías por su ID */
-router.delete('/eliminar/:id', function (req, res, next) {
+router.delete('/eliminar/:id', checkLoginAdmin, function (req, res, next) {
   Categorias_Controller.eliminar_categoria(req.params.id)
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));

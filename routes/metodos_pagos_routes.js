@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const Metodos_Pago_Controller = require('../controllers/metodos_pagos_controllers');
+const { checkLoginAdmin } = require('../auth/auth');
 
 /* (GET) Mostrar todas los métodos */
 router.get('/mostrar', (req, res) => {
@@ -17,21 +18,21 @@ router.get('/buscar/:id', (req, res) => {
 });
 
 /* (POST) Ingresar métodos */
-router.post('/ingresar', (req, res) => {
+router.post('/ingresar', checkLoginAdmin, (req, res) => {
   Metodos_Pago_Controller.ingresar_metodo(req.body)
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));
 });
 
 /* (PUT) Editar métodos */
-router.put('/editar/:id', function (req, res, next) {
+router.put('/editar/:id', checkLoginAdmin, function (req, res, next) {
   Metodos_Pago_Controller.editar_metodo(req.params.id, req.body)
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));
 });
 
 /* (DELETE) Eliminar métodos por su ID */
-router.delete('/eliminar/:id', function (req, res, next) {
+router.delete('/eliminar/:id', checkLoginAdmin, function (req, res, next) {
   Metodos_Pago_Controller.eliminar_metodo(req.params.id)
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));

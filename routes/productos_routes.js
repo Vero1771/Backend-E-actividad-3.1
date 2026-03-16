@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const Productos_Controller = require('../controllers/productos_controllers');
+const { checkLoginAdmin } = require('../auth/auth');
 
 /* (GET) Mostrar todos los productos */
 router.get('/mostrar', function (req, res, next) {
@@ -24,21 +25,21 @@ router.get('/buscar/:id', function (req, res, next) {
 });
 
 /* (POST) Ingresar productos */
-router.post('/ingresar', function (req, res, next) {
+router.post('/ingresar', checkLoginAdmin, function (req, res, next) {
   Productos_Controller.ingresar_producto(req.body)
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));
 });
 
 /* (PUT) Editar productos */
-router.put('/editar/:id', function (req, res, next) {
+router.put('/editar/:id', checkLoginAdmin, function (req, res, next) {
   Productos_Controller.editar_producto(req.params.id, req.body)
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));
 });
 
 /* (DELETE) Eliminar productos por su ID */
-router.delete('/eliminar/:id', function (req, res, next) {
+router.delete('/eliminar/:id', checkLoginAdmin, function (req, res, next) {
   Productos_Controller.eliminar_producto(req.params.id)
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));

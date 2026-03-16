@@ -7,7 +7,10 @@
       <h1><%= title %> <%= entrada.id_entrada %></h1>
 
       <form class="formEntidad" action="/entradas/editar/<%= entrada.id_entrada %>?_method=PUT" method="POST">
-        <label>Venta Origen: #<%= entrada.id_venta %></label>
+
+        <% if(entrada.id_venta) { %>
+          <label>Venta Origen: #<%= entrada.id_venta %></label>
+        <% } %>
         
         <div>
           <label for="id_funcion">Elige una Función</label><br>

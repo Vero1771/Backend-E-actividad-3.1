@@ -7,16 +7,6 @@
 
       <div class="formEntidad">   
         
-        <div class="row">
-          <label>Método de Pago:</label>
-            <select id="id_metodo">
-              <% metodos_pago_list.forEach(m => { %>
-                <option value="<%= m.id_metodo %>">
-                  <%= m.nombre %>
-                </option>
-              <% }) %>
-            </select>
-        </div><br>
 
         <div class="row">
           <label>Seleccionar Función:</label>
@@ -57,7 +47,6 @@
 
       <script>
         async function enviarVenta() {
-            const id_metodo = document.getElementById('id_metodo').value;
             const id_funcion = document.getElementById('id_funcion_master').value;
             const precio = document.getElementById('id_precio_entradas').value;
 
@@ -74,7 +63,6 @@
             }
 
             const data = {
-                id_metodo: parseInt(id_metodo),
                 entradas: asientosSeleccionados
             };
 
@@ -88,7 +76,7 @@
                 const result = await response.json();
 
                 if (response.ok) {
-                  alert("Venta realizada: ID " + result.result.id_venta);
+                  alert("Entradas registradas");
                   window.location.reload(); // Recargar para limpiar
                 } else {
                   alert("Error: " + result.message);
