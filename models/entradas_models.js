@@ -113,6 +113,20 @@ class EntradasModel {
         );
     });
   }
+  static mostrar_entradas_vendidas_de_un_usuario(id_usuario) {
+    return new Promise((resolve, reject) => {
+      pool.query('SELECT ventas.id_usuario, entradas.id_entrada, peliculas.titulo As "pelicula", salas.nombre As "sala", asientos.id_asiento, asientos.nombre As "asiento", funciones.id_funcion, funciones.fecha_hora As "fecha_funcion", ventas.id_venta, ventas.fecha As "fecha_venta", entradas.precio FROM `entradas` JOIN `funciones` ON entradas.id_funcion = funciones.id_funcion JOIN `peliculas` ON peliculas.id_pelicula = funciones.id_pelicula JOIN `salas` ON salas.id_sala = funciones.id_sala JOIN `asientos` ON entradas.id_asiento = asientos.id_asiento JOIN `ventas` ON entradas.id_venta = ventas.id_venta WHERE ventas.id_usuario = ?', id_usuario)
+        .then(([rows]) => {
+          if (rows.length > 0) {
+            resolve({ code: 200, message: "consulta completada con éxito", result: rows })
+          }
+          resolve({ code: 404, message: "no hay entradas registradas con ese ID", result: rows })
+        })
+        .catch(err =>
+          reject({ code: 500, message: err.message, result: [err] })
+        );
+    });
+  }
   static ingresar_entradas(entradas) {
     return new Promise(async (resolve, reject) => {
       let connection;

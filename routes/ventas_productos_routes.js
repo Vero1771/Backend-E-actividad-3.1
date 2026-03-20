@@ -19,9 +19,17 @@ router.get('/buscar/:id', (req, res) => {
     .catch(err => res.status(err.code).json(err));
 });
 
+/* (GET) Mostrar las compras de un usuario */
+router.get('/tus_compras', checkLoginUser, function (req, res, next) {
+  Ventas_Productos_Controller.mostrar_productos_vendidos_de_un_usuario(req.usuario.id_usuario)
+    .then(r => res.status(r.code).json(r))
+    .catch(err => res.status(err.code).json(err));
+});
+
 /* (POST) Ingresar productos vendidos */
 router.post('/ingresar', checkLoginUser, function (req, res, next) {
   const { productos = [], ...datosVenta } = req.body;
+  datosVenta.id_usuario = req.usuario.id_usuario;
 
   Ventas_Productos_Controller.ingresar_producto_vendido(datosVenta, productos)
     .then(r => res.status(r.code).json(r))

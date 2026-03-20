@@ -10,6 +10,9 @@ class EntradasController {
   static mostrar_entradas_por_id(id) {
     return Entradas_Model.mostrar_entradas_por_id(id).then(r => r).catch(err => err);
   }
+  static mostrar_entradas_vendidas_de_un_usuario(id_usuario) {
+    return Entradas_Model.mostrar_entradas_vendidas_de_un_usuario(id_usuario).then(r => r).catch(err => err);
+  }
   static ingresar_entradas(entradas) {
     return Entradas_Model.ingresar_entradas(entradas).then(r => r).catch(err => err);
   }

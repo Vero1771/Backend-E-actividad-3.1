@@ -27,6 +27,13 @@ router.get('/buscar/:id', (req, res) => {
     .catch(err => res.status(err.code).json(err));
 });
 
+/* (GET) las compras de un usuario */
+router.get('/tus_compras', checkLoginUser, (req, res) => {
+  Entradas_Controller.mostrar_entradas_vendidas_de_un_usuario(req.usuario.id_usuario)
+    .then(r => res.status(r.code).json(r))
+    .catch(err => res.status(err.code).json(err));
+});
+
 /* (POST) Ingresar entradas */
 router.post('/ingresar', checkLoginAdmin, (req, res) => {
   const { entradas = [] } = req.body;
@@ -35,10 +42,10 @@ router.post('/ingresar', checkLoginAdmin, (req, res) => {
     .catch(err => res.status(err.code).json(err))
 });
 
-
 /* (PUT) Vender entradas */
 router.put('/vender', checkLoginUser, (req, res) => {
   const { entradas = [], ...datosVenta } = req.body;
+  datosVenta.id_usuario = req.usuario.id_usuario;
 
   Entradas_Controller.vender_entradas(datosVenta, entradas)
     .then(r => res.status(r.code).json(r))

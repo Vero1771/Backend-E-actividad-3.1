@@ -27,7 +27,9 @@ router.get('/rango', checkLoginAdmin, function (req, res, next) {
 
 /* (POST) Ingresar ventas */
 router.post('/ingresar', checkLoginAdmin, function (req, res, next) {
-  Ventas_Controller.ingresar_venta(req.body)
+  const datosVenta = { ...req.body, id_usuario: req.usuario.id_usuario };
+
+  Ventas_Controller.ingresar_venta(datosVenta)
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));
 });

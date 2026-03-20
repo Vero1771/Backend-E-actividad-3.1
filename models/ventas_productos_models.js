@@ -100,6 +100,20 @@ class VentasProductosModel {
         );
     });
   }
+  static mostrar_productos_vendidos_de_un_usuario(id_usuario) {
+    return new Promise((resolve, reject) => {
+      pool.query('SELECT ventas.id_usuario, ventas_productos.id_venta_producto, productos.id_producto, productos.nombre AS "producto", productos.precio_unitario, ventas_productos.cantidad, ventas.id_venta, metodos_pago.nombre AS "metodo_pago", ventas.fecha, ventas.total FROM `ventas_productos` JOIN `productos` ON productos.id_producto = ventas_productos.id_producto JOIN `ventas` ON ventas.id_venta = ventas_productos.id_venta JOIN `metodos_pago` ON metodos_pago.id_metodo = ventas.id_metodo WHERE ventas.id_usuario = ?', id_usuario)
+        .then(([rows]) => {
+          if (rows.length > 0) {
+            resolve({ code: 200, message: "consulta completada con éxito", result: rows })
+          }
+          resolve({ code: 404, message: "no hay ventas registradas con ese ID", result: rows })
+        })
+        .catch(err =>
+          reject({ code: 500, message: err.message, result: [err] })
+        );
+    });
+  }
   static ingresar_producto_vendido(venta, venta_producto) {
     return new Promise(async (resolve, reject) => {
       let connection;

@@ -64,6 +64,8 @@ function checkLoginUser(req, res, next) {
     });
   };
 
+  req.usuario = Utoken;
+
   next();
 }
 
@@ -93,6 +95,8 @@ function checkLoginAdmin(req, res, next) {
       result: [Utoken]
     });
   };
+
+  req.usuario = Utoken;
 
   next();
 }
