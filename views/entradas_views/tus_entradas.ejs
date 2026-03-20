@@ -1,0 +1,45 @@
+<%-include("../components/head.ejs")%>
+  <body>
+
+    <%-include("../components/nav.ejs")%>
+
+    <main>
+      <h1><%= title %></h1>
+
+      <% if(entradas_list.length <= 0) { %>
+        <h2>No hay entradas en tus compras</h1>
+      <% }  %>
+
+      <table>
+          <thead>
+              <tr>
+                  <th>ID</th>
+                  <th>Película</th>
+                  <th>Sala</th>
+                  <th>Asiento</th>
+                  <th>Fecha Función</th>
+                  <th>Número de Venta</th>
+                  <th>Fecha Venta</th>
+                  <th>Precio</th>
+              </tr>
+          </thead>
+          <tbody>
+              <% entradas_list.forEach((e, i) => { %>
+                  <tr>
+                    <td><%= e.id_entrada %></td>
+                    <td><%= e.pelicula %></td>
+                    <td><%= e.sala %></td>
+                    <td><%= e.asiento %></td>
+                    <td><%= e.fecha_funcion.toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' }) %></td>
+                    <td><%= e.id_venta %></td>
+                    <td><%= e.fecha_venta.toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' }) %></td>
+                    <td><%= e.precio %></td>
+                  </tr>
+              <% }); %>
+          </tbody>
+      </table>
+    </main>
+
+  </body>
+
+<%-include("../components/footer.ejs")%>

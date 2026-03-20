@@ -4,7 +4,7 @@ const Entradas_Controller = require('../controllers/entradas_controllers');
 const Funciones_Controller = require('../controllers/funciones_controllers');
 const Asientos_Controller = require('../controllers/asientos_controllers');
 const Metodos_Pagos_Controller = require('../controllers/metodos_pagos_controllers');
-const { checkLoginUser, checkLoginAdmin } = require('../auth/auth');
+const { checkLoginUser, checkLoginAdmin, checkLoginView } = require('../auth/auth');
 
 /* (GET) Mostrar todas las entradas */
 router.get('/mostrar', (req, res) => {
@@ -73,6 +73,22 @@ router.get('/', function (req, res, next) {
   Entradas_Controller.mostrar_entradas()
     .then((r) => {
       res.render('./entradas_views/entradas', { title: 'Entradas', entradas_list: r.result });
+    })
+    .catch(err => {
+      res.status(500).render('error', {
+        title: 'Error del Servidor',
+        code: 500,
+        message: 'No pudimos conectar con la base de datos'
+      });
+    });
+});
+
+/* (GET) Todas las entradas compradas de un usuario */
+router.get('/tus_entradas', checkLoginView, function (req, res, next) {
+  const id_usuario = req.usuario.id_usuario;
+  Entradas_Controller.mostrar_entradas_vendidas_de_un_usuario(id_usuario)
+    .then((r) => {
+      res.render('./entradas_views/tus_entradas', { title: 'Tus Entradas', entradas_list: r.result });
     })
     .catch(err => {
       res.status(500).render('error', {

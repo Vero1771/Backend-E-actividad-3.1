@@ -1,0 +1,45 @@
+<%-include("../components/head.ejs")%>
+  <body>
+
+    <%-include("../components/nav.ejs")%>
+
+    <main>
+      <h1><%= title %></h1>
+
+      <% if(ventas_list.length <= 0) { %>
+        <h2>No hay productos en tus compras</h1>
+      <% }  %>
+
+      <table>
+          <thead>
+              <tr>
+                  <th>ID de Venta</th>
+                  <th>ID de Venta Individual</th>
+                  <th>Método de Pago</th>
+                  <th>Fecha</th>
+                  <th>Producto</th>
+                  <th>Cantidad</th>
+                  <th>SubTotal</th>
+                  <th>Total</th>
+              </tr>
+          </thead>
+          <tbody>
+              <% ventas_list.forEach((v, i) => { %>
+                  <tr>
+                    <td><%= v.id_venta %></td>
+                    <td><%= v.id_venta_producto %></td>
+                    <td><%= v.metodo_pago %></td>
+                    <td><%= v.fecha.toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' }) %></td>
+                    <td><%= v.producto %></td>
+                    <td><%= v.cantidad %></td>
+                    <td><%= v.precio_unitario %></td>
+                    <td><%= v.total %></td>
+                  </tr>
+              <% }); %>
+          </tbody>
+      </table>
+    </main>
+
+  </body>
+
+<%-include("../components/footer.ejs")%>

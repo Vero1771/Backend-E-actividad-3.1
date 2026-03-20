@@ -3,7 +3,7 @@ var router = express.Router();
 const Ventas_Productos_Controller = require('../controllers/ventas_productos_controllers');
 const Productos_Controller = require('../controllers/productos_controllers');
 const Metodos_Pagos_Controller = require('../controllers/metodos_pagos_controllers');
-const { checkLoginUser, checkLoginAdmin } = require('../auth/auth');
+const { checkLoginUser, checkLoginAdmin, checkLoginView } = require('../auth/auth');
 
 /* (GET) Mostrar todos los productos vendidos */
 router.get('/mostrar', function (req, res, next) {
@@ -67,6 +67,23 @@ router.get('/', function (req, res, next) {
     });
 });
 
+
+/* (GET) Todas las compras de un usuario */
+router.get('/tus_productos', checkLoginView, function (req, res, next) {
+  const id_usuario = req.usuario.id_usuario;
+  Ventas_Productos_Controller.mostrar_productos_vendidos_de_un_usuario(id_usuario)
+    .then((r) => {
+      res.render('./ventas_views/tus_productos', { title: 'Tus Productos', ventas_list: r.result });
+    })
+    .catch(err => {
+      res.status(500).render('error', {
+        title: 'Error del Servidor',
+        code: 500,
+        message: 'No pudimos conectar con la base de datos'
+      });
+    });
+});
+
 /* (POST) Comprar producto */
 router.get('/ingresar', function (req, res, next) {
   Productos_Controller.mostrar_productos_en_stock()
@@ -111,7 +128,7 @@ router.get('/actualizar/:id', function (req, res, next) {
               message: r.message
             });
           }
-          
+
           res.render('./ventas_views/editar_ventas_productos', {
             title: 'Editar Venta',
             productos_list: productos.result,

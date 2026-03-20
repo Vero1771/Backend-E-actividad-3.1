@@ -33,7 +33,16 @@ router.post('/ingresar_admin', (req, res) => {
 /* (POST) Login */
 router.post('/login', (req, res) => {
   Usuarios_Controller.login(req.body)
-    .then(r => res.status(r.code).json(r))
+    .then(r => {
+      if (r.code === 200) {
+        res.cookie('token', r.result.token, { 
+          httpOnly: true, 
+          maxAge: 3600000
+        });
+        return res.status(r.code).json(r);
+      }
+      res.render('login', { error: r.message });
+    })
     .catch(err => res.status(err.code).json(err));
 });
 

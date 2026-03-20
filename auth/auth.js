@@ -101,4 +101,26 @@ function checkLoginAdmin(req, res, next) {
   next();
 }
 
-module.exports = { checkLogin, checkLoginUser, checkLoginAdmin };
+function checkLoginView(req, res, next) {
+  let reqToken = req.cookies.token || req.headers.authorization;
+
+  if (!reqToken) {
+    return res.redirect('/login');
+  }
+
+  if (reqToken.startsWith('Bearer ')) {
+    reqToken = reqToken.replace('Bearer ', '');
+  }
+
+  const { valLogin, Utoken } = check(reqToken);
+  
+  if (valLogin !== true) {
+    res.clearCookie('token'); 
+    return res.redirect('/login');
+  }
+
+  req.usuario = Utoken;
+  next();
+}
+
+module.exports = { checkLogin, checkLoginUser, checkLoginAdmin, checkLoginView };
