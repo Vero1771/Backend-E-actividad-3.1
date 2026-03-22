@@ -6,7 +6,7 @@
     <main>
       <h1><%= title %> <%= entrada.id_entrada %></h1>
 
-      <form class="formEntidad" action="/entradas/editar/<%= entrada.id_entrada %>?_method=PUT" method="POST">
+      <form class="formEntidad">
 
         <% if(entrada.id_venta) { %>
           <label>Venta Origen: #<%= entrada.id_venta %></label>
@@ -15,7 +15,7 @@
         <div>
           <label for="id_funcion">Elige una Función</label><br>
           <% if(funciones_list.length > 0) { %>
-            <select name="id_funcion" id="id_funcion" required>
+            <select name="id_funcion" id="id_funcion">
               <% funciones_list.forEach((f) => { %>
                 <option value="<%= f.id_funcion %>" 
                   <%= f.id_funcion == entrada.id_funcion ? 'selected' : '' %>>
@@ -31,7 +31,7 @@
         <div>
           <label for="id_asiento">Elige un Asiento</label><br>
           <% if(asientos_list.length > 0) { %>
-            <select name="id_asiento" id="id_asiento" required>
+            <select name="id_asiento" id="id_asiento">
               <% asientos_list.forEach((a) => { %>
                 <option value="<%= a.id_asiento %>" 
                   <%= a.id_asiento == entrada.id_asiento ? 'selected' : '' %>>
@@ -45,12 +45,44 @@
         <br>
 
         <label for="precio">Precio Cobrado:</label>
-        <input type="number" step="0.01" name="precio" value="<%= entrada.precio %>">
+        <input type="number" id="id_precio" step="0.01" name="precio" value="<%= entrada.precio %>">
 
         <br>
 
-        <input type="submit" value="Guardar Cambios">
+        <button class="formEntidad__submit" type="button" onclick="actualizarEntrada('<%= entrada.id_entrada %>')">Guardar Cambios</button>
       </form>
+
+      <script>
+        async function actualizarEntrada(id) {
+          const data = {
+            id_funcion: document.getElementById('id_funcion').value,
+            id_asiento: document.getElementById('id_asiento').value,
+            precio: document.getElementById('id_precio').value,
+          };
+
+          try {
+            const response = await fetch(`/entradas/editar/${id}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+              alert("Entrada actualizada con éxito");
+              window.location.href = '/entradas'; // Redirigir a la lista
+            } else {
+              // Si el servidor responde con 400 mostrar los mensajes de error
+              const mensajesError = result.result.join("\n"); 
+              alert("Error en la validación:\n" + mensajesError);
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            alert("Ocurrió un problema al conectar con el servidor.");
+          }
+        }
+      </script>
      
     </main>
   </body>

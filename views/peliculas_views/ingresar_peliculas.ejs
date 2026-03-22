@@ -6,18 +6,18 @@
     <main>
       <h1>Ingresar <%= title %></h1>
 
-      <form class="formEntidad" action method="post">
+      <form class="formEntidad" id="formIngresarPelicula">
 
         <label id="titulo">Título
-          <input type="text" name="titulo" required>
+          <input id="titulo_input" type="text" name="titulo">
         </label><br>
 
         <label id="anio">Año
-          <input type="number" name="anio" required>
+          <input id="anio_input" type="number" name="anio">
         </label><br>
 
         <label id="duracion">Duración
-          <input type="number" name="duracion" required>
+          <input id="duracion_input" type="number" name="duracion">
         </label><br>
 
         <div>
@@ -52,9 +52,53 @@
             <% } %>
         </div>
 
-        <input type="submit">
+        <button class="formEntidad__submit" type="button" onclick="enviarFormulario()">Enviar</button>
 
       </form>
+
+      <script>
+        async function enviarFormulario() {
+          const titulo = document.getElementById('titulo_input').value;
+          const anio = document.getElementById('anio_input').value;
+          const duracion = document.getElementById('duracion_input').value;
+
+          const radioClasificacion = document.querySelector('input[name="id_clasificacion"]:checked');
+          const id_clasificacion = radioClasificacion ? parseInt(radioClasificacion.value) : null;
+
+          const checkboxesCategorias = document.querySelectorAll('input[name="categorias"]:checked');
+          const categorias = Array.from(checkboxesCategorias).map(cb => parseInt(cb.value));
+
+          const data = {
+            titulo,
+            anio,
+            duracion,
+            id_clasificacion,
+            categorias
+          };
+
+          try {
+            const response = await fetch('/peliculas/ingresar', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+              alert("Película ingresada con éxito");
+              window.location.href = '/peliculas'; 
+            } else {
+              const mensajesError = result.result.join("\n"); 
+              alert("Error en la validación:\n" + mensajesError);
+            }
+          } catch (error) {
+            console.error("Error en la petición:", error);
+            alert("Ocurrió un error inesperado en el servidor.");
+          }
+        }
+      </script>
+
     </main>
   </body>
 

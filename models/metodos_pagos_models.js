@@ -8,7 +8,7 @@ class MetodosPagoModel {
       if (metodo[campo] === undefined || metodo[campo] === null) errors.push(`El campo ${campo} es obligatorio`);
     }
 
-    if (typeof (metodo.nombre) !== "string") {
+    if (typeof (metodo.nombre) !== "string" || metodo.nombre == "") {
       errors.push("El nombre del método debe ser una cadena de texto");
     }
 

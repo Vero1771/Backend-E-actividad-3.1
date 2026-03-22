@@ -81,7 +81,7 @@ router.get('/recientes', function (req, res, next) {
 });
 
 /* (POST) */
-router.get('/ingresar', function (req, res, next) {
+router.get('/ingresar', checkLoginAdmin, function (req, res, next) {
   Peliculas_Controller.mostrar_peliculas()
     .then((pelis) => {
       Salas_Controller.mostrar_salas()
@@ -113,7 +113,7 @@ router.get('/ingresar', function (req, res, next) {
 });
 
 /* (PUT) Mostrar formulario de edición */
-router.get('/actualizar/:id', function (req, res, next) {
+router.get('/actualizar/:id', checkLoginAdmin, function (req, res, next) {
   Funciones_Controller.mostrar_funciones_por_id(req.params.id)
     .then((funcion) => {
       Peliculas_Controller.mostrar_peliculas()

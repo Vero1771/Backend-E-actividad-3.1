@@ -18,6 +18,7 @@
                   <th>Método de Pago</th>
                   <th>Fecha</th>
                   <th>Producto</th>
+                  <th>Precio Unitario</th>
                   <th>Cantidad</th>
                   <th>SubTotal</th>
                   <th>Total</th>
@@ -31,8 +32,9 @@
                     <td><%= v.metodo_pago %></td>
                     <td><%= v.fecha.toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' }) %></td>
                     <td><%= v.producto %></td>
-                    <td><%= v.cantidad %></td>
                     <td><%= v.precio_unitario %></td>
+                    <td><%= v.cantidad %></td>
+                    <td><%= v.subtotal %></td>
                     <td><%= v.total %></td>
                   </tr>
               <% }); %>

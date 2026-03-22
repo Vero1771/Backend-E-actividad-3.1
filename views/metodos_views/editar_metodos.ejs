@@ -5,15 +5,46 @@
       <main>
         <h1><%= title %>: <%= metodo.nombre %></h1>
 
-        <form class="formEntidad" action="/metodos/editar/<%= metodo.id_metodo %>?_method=PUT"  method="post">
+        <form class="formEntidad" id="formEditarMetodo">
 
           <label id="nombre">Nombre
-            <input type="text" name="nombre" value="<%= metodo.nombre %>" required>
+            <input type="text" id="nombre_input" name="nombre" value="<%= metodo.nombre %>">
           </label><br>
 
-          <input type="submit"  value="Guardar Cambios">
+          <button class="formEntidad__submit" type="button" onclick="actualizarMetodo('<%= metodo.id_metodo %>')">Guardar Cambios</button>
 
         </form>
+
+        <script>
+          async function actualizarMetodo(id) {
+            const data = {
+              nombre: document.getElementById('nombre_input').value
+            };
+
+            try {
+              const response = await fetch(`/metodos/editar/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+              });
+
+              const result = await response.json();
+
+              if (response.ok) {
+                alert("Método actualizado con éxito");
+                window.location.href = '/metodos'; // Redirigir a la lista
+              } else {
+                // Si el servidor responde con 400 mostrar los mensajes de error
+                const mensajesError = result.result.join("\n"); 
+                alert("Error en la validación:\n" + mensajesError);
+              }
+            } catch (error) {
+              console.error("Error:", error);
+              alert("Ocurrió un problema al conectar con el servidor.");
+            }
+          }
+        </script>
+
       </main>
   </body>
 

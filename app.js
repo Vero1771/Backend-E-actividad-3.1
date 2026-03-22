@@ -32,6 +32,25 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'));
 
+
+const jwt = require('jsonwebtoken');
+
+app.use((req, res, next) => {
+  const token = req.cookies.token;
+  res.locals.user = null; // Variable global para EJS
+
+  if (token) {
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      res.locals.user = decoded;
+    } catch (err) {
+      // Si el token es inválido se elimina
+      res.clearCookie('token');
+    }
+  }
+  next();
+});
+
 app.use('/', indexRouter);
 app.use('/usuarios', usuariosRouter);
 app.use('/peliculas', peliculasRouter);

@@ -5,19 +5,51 @@
       <main>
         <h1>Ingresar <%= title %></h1>
 
-        <form class="formEntidad" action method="post">
+        <form class="formEntidad" id="formIngresarUser">
 
           <label id="email">Email
-            <input type="email" name="email" required>
+            <input type="email" name="email" id="email_input">
           </label><br>
 
           <label id="password">Contraseña
-            <input type="password" name="password" required>
+            <input type="password" name="password" id="password_input">
           </label><br>
 
-          <input type="submit">
+          <button class="formEntidad__submit" type="button" onclick="enviarFormulario()">Enviar</button>
 
         </form>
+
+        <script>
+          async function enviarFormulario() {
+            const data = {
+              email: document.getElementById('email_input').value,
+              password: document.getElementById('password_input').value
+            };
+
+            try {
+              const response = await fetch('/usuarios/ingresar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+              });
+
+              const result = await response.json();
+
+              if (response.ok) {
+                alert("Usuario ingresado con éxito");
+                window.location.href = '/'; // Redirigir al principio  
+              } else {
+                // Si el servidor responde con 400 mostrar los mensajes de error
+                const mensajesError = result.result.join("\n"); 
+                alert("Error en la validación:\n" + mensajesError);
+              }
+            } catch (error) {
+              console.error("Error en la petición:", error); 
+              alert("Ocurrió un error inesperado en el servidor.");
+            }
+          }
+        </script>
+
       </main>
   </body>
 

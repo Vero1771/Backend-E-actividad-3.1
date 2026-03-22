@@ -6,7 +6,7 @@ const Metodos_Pagos_Controller = require('../controllers/metodos_pagos_controlle
 const { checkLoginUser, checkLoginAdmin, checkLoginView } = require('../auth/auth');
 
 /* (GET) Mostrar todos los productos vendidos */
-router.get('/mostrar', function (req, res, next) {
+router.get('/mostrar', checkLoginAdmin, function (req, res, next) {
   Ventas_Productos_Controller.mostrar_productos_vendidos()
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));
@@ -53,7 +53,7 @@ router.delete('/eliminar/:id', checkLoginAdmin, function (req, res, next) {
 /* VIEWS EJS */
 
 /* (GET) Todas las ventas */
-router.get('/', function (req, res, next) {
+router.get('/', checkLoginAdmin, function (req, res, next) {
   Ventas_Productos_Controller.mostrar_productos_vendidos()
     .then((r) => {
       res.render('./ventas_views/ventas_productos', { title: 'Ventas de Productos', ventas_list: r.result });
@@ -66,7 +66,6 @@ router.get('/', function (req, res, next) {
       });
     });
 });
-
 
 /* (GET) Todas las compras de un usuario */
 router.get('/tus_productos', checkLoginView, function (req, res, next) {
@@ -85,7 +84,7 @@ router.get('/tus_productos', checkLoginView, function (req, res, next) {
 });
 
 /* (POST) Comprar producto */
-router.get('/ingresar', function (req, res, next) {
+router.get('/ingresar', checkLoginUser, function (req, res, next) {
   Productos_Controller.mostrar_productos_en_stock()
     .then((productos) => {
       Metodos_Pagos_Controller.mostrar_metodos_pago()
@@ -113,9 +112,8 @@ router.get('/ingresar', function (req, res, next) {
     });
 });
 
-
 /* (PUT) Mostrar formulario de edición */
-router.get('/actualizar/:id', function (req, res, next) {
+router.get('/actualizar/:id', checkLoginAdmin, function (req, res, next) {
   Productos_Controller.mostrar_productos()
     .then((productos) => {
       Ventas_Productos_Controller.mostrar_productos_vendidos_por_id(req.params.id)

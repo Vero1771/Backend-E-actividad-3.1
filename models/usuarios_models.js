@@ -11,11 +11,11 @@ class UsuariosModel {
       if (usuario[campo] === undefined || usuario[campo] === null) errors.push(`El campo ${campo} es obligatorio`);
     }
 
-    if (typeof (usuario.email) !== "string") {
+    if (typeof (usuario.email) !== "string" || usuario.email == "") {
       errors.push("El email del usuario debe ser una cadena de texto");
     }
 
-    if (typeof (usuario.password) !== "string") {
+    if (typeof (usuario.password) !== "string" || usuario.password == "") {
       errors.push("La contraseña del usuario debe ser una cadena de texto");
     }
 
@@ -111,7 +111,7 @@ class UsuariosModel {
               resolve({ code: 200, message: "consulta completada con éxito", result: userData })
             }   
 
-            resolve({ code: 401, message: "La contraseña del usuario es incorrecta", result: usuario })
+            reject({ code: 401, message: "Error al ingresar", result: usuario })
 
           }
           resolve({ code: 404, message: "no hay usuarios registrados con ese email", result: rows })

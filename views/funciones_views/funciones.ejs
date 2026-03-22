@@ -17,7 +17,9 @@
                   <th>Película</th>
                   <th>Sala</th>
                   <th>Fecha y Hora</th>
-                  <th>Administrar</th>
+                  <% if (user && user.rol === 'admin') { %>
+                    <th>Administrar</th>
+                  <% } %>
               </tr>
           </thead>
           <tbody>
@@ -27,18 +29,51 @@
                     <td><%= f.titulo %></td>
                     <td><%= f.nombre %></td>
                     <td><%= f.fecha_hora.toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' }) %></td>
+
+                  <% if (user && user.rol === 'admin') { %>
                     <td>    
                       <div class="botonera">
                         <a class="botonera__opcion opcion__editar" href="/funciones/actualizar/<%= f.id_funcion %>" class="button">Editar</a>
-                        <form class="botonera__opcion" action="/funciones/eliminar/<%= f.id_funcion %>/?_method=DELETE" method="post" onsubmit="return confirm('¿Estás seguro de eliminar esta función?');">
-                          <input class="opcion__eliminar" type="submit" class="button" value="X">
-                        </form>
+                        <button class="botonera__opcion opcion__eliminar" onclick="eliminarFuncion(this, '<%= f.id_funcion %>')"> X </button> 
                       </div>
                     </td>
+                  <% } %>
+
                   </tr>
               <% }); %>
           </tbody>
       </table>
+       
+      <script>
+        async function eliminarFuncion(boton, id) {
+          if (!confirm('¿Estás seguro de eliminar esta función?')) return;
+
+          try {
+            const response = await fetch(`/funciones/eliminar/${id}`, {
+              method: 'DELETE', 
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            });
+
+            if (response.ok) {
+              const fila = boton.closest('tr'); //eliminar la fila de la tabla sin recargar
+              fila.remove();
+                  
+              const tbody = document.querySelector('tbody');
+              if (tbody.children.length === 0) {
+                location.reload(); 
+              }
+            } else {
+              alert('Error al eliminar la función');
+            }
+          } catch (error) {
+            console.error('Error:', error);
+            alert('Hubo un problema con la conexión');
+          }
+        }
+      </script>
+
     </main>
 
   </body>

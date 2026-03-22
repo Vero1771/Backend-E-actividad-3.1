@@ -5,19 +5,51 @@
       <main>
         <h1><%= title %>: <%= usuario.email %></h1>
 
-        <form class="formEntidad" action="/usuarios/editar/<%= usuario.id_usuario %>?_method=PUT"  method="post">
+        <form class="formEntidad" id="formEditarUser">
 
           <label id="email">Email
-            <input type="email" name="email" value="<%= usuario.email %>" required>
+            <input type="email" name="email" value="<%= usuario.email %>" id="email_input">
           </label><br>
 
           <label id="password">Nueva Contraseña
-            <input type="password" name="password" required>
+            <input type="password" name="password" id="password_input">
           </label><br>
 
-          <input type="submit"  value="Guardar Cambios">
+          <button class="formEntidad__submit" type="button" onclick="actualizarUsuario('<%= usuario.id_usuario %>')">Guardar Cambios</button>
 
         </form>
+        
+        <script>
+          async function actualizarUsuario(id) {
+            const data = {
+              email: document.getElementById('email_input').value,
+              password: document.getElementById('password_input').value
+            };
+
+            try {
+              const response = await fetch(`/usuarios/editar/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+              });
+
+              const result = await response.json();
+
+              if (response.ok) {
+                alert("Usuario actualizado con éxito");
+                window.location.href = '/usuarios'; // Redirigir a la lista
+              } else {
+                // Si el servidor responde con 400 mostrar los mensajes de error
+                const mensajesError = result.result.join("\n"); 
+                alert("Error en la validación:\n" + mensajesError);
+              }
+            } catch (error) {
+              console.error("Error:", error);
+              alert("Ocurrió un problema al conectar con el servidor.");
+            }
+          }
+        </script>
+
       </main>
   </body>
 

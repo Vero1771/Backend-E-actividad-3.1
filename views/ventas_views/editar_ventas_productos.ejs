@@ -5,7 +5,7 @@
       <main>
         <h1><%= title %>: <%= venta.id_venta_producto %></h1>
 
-        <form class="formEntidad" action="/ventas_productos/editar/<%= venta.id_venta_producto %>?_method=PUT"  method="post">
+        <form class="formEntidad" id="formEditarVentaProducto">
 
           <div class="row">
             <label>Producto:</label>
@@ -22,16 +22,48 @@
           <br>
 
           <label id="cantidad">Cantidad
-            <input type="number" name="cantidad" value="<%= venta.cantidad %>" required>
+            <input type="number" name="cantidad" value="<%= venta.cantidad %>" id="cantidad_input">
           </label><br>
 
           <label id="subtotal">SubTotal
-            <input type="number" step="0.01" name="subtotal" value="<%= venta.precio_unitario %>" required>
+            <input type="number" step="0.01" name="subtotal" value="<%= venta.subtotal %>" id="subtotal_input">
           </label><br>
 
-           <input type="submit"  value="Guardar Cambios">
+          <button class="formEntidad__submit" type="button" onclick="actualizarVentaProducto('<%= venta.id_venta_producto %>')">Guardar Cambios</button>
 
         </form>
+
+        <script>
+          async function actualizarVentaProducto(id) {
+            const data = {
+              id_producto: document.getElementById('id_producto').value,
+              cantidad: document.getElementById('cantidad_input').value,
+              subtotal: document.getElementById('subtotal_input').value
+            };
+
+            try {
+              const response = await fetch(`/ventas_productos/editar/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+              });
+
+              const result = await response.json();
+
+              if (response.ok) {
+                alert("Venta actualizada con éxito");
+                window.location.href = '/ventas_productos'; // Redirigir a la lista
+              } else {
+                // Si el servidor responde con 400 mostrar los mensajes de error
+                const mensajesError = result.result.join("\n"); 
+                alert("Error en la validación:\n" + mensajesError);
+              }
+            } catch (error) {
+              console.error("Error:", error);
+              alert("Ocurrió un problema al conectar con el servidor.");
+            }
+          }
+        </script>
       </main>
   </body>
 

@@ -8,11 +8,11 @@ class PeliculasModel {
       if (peli[campo] === undefined || peli[campo] === null) errors.push(`El campo ${campo} es obligatorio`);
     }
 
-    if (typeof (peli.titulo) !== "string") {
+    if (typeof (peli.titulo) !== "string" || peli.titulo == "") {
       errors.push("El título debe ser una cadena de texto");
     }
 
-    if (isNaN(peli.anio) || peli.anio < 0 || isNaN(peli.duracion) || peli.duracion < 0 || isNaN(peli.id_clasificacion) || peli.id_clasificacion < 0) {
+    if (isNaN(peli.anio) || peli.anio <= 0 || isNaN(peli.duracion) || peli.duracion <= 0 || isNaN(peli.id_clasificacion) || peli.id_clasificacion <= 0) {
       errors.push("El año, la duración, y el id de la clasificación deben ser números válidos");
     }
 

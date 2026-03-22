@@ -8,7 +8,7 @@ class FuncionesModel {
       if (funcion[campo] === undefined || funcion[campo] === null) errors.push(`El campo ${campo} es obligatorio`);
     }
 
-    if (isNaN(funcion.id_pelicula) || funcion.id_pelicula < 0 || isNaN(funcion.id_sala) || funcion.id_sala < 0) {
+    if (isNaN(funcion.id_pelicula) || funcion.id_pelicula <= 0 || isNaN(funcion.id_sala) || funcion.id_sala <= 0) {
       errors.push("El id de la película, y el id de la sala deben ser números válidos");
     }
 

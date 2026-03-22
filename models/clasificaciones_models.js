@@ -8,7 +8,7 @@ class ClasificacionesModel {
       if (clasificacion[campo] === undefined || clasificacion[campo] === null) errors.push(`El campo ${campo} es obligatorio`);
     }
 
-    if (typeof (clasificacion.nombre) !== "string") {
+    if (typeof (clasificacion.nombre) !== "string" || clasificacion.nombre == "") {
       errors.push("El nombre de la clasificación debe ser una cadena de texto");
     }
 

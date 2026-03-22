@@ -4,18 +4,18 @@
   <main>
       <h1><%= title %>: <%= product.nombre %></h1>
 
-      <form class="formEntidad" action="/productos/editar/<%= product.id_producto %>?_method=PUT" method="post">
+      <form class="formEntidad" id="formEditarProducto">
 
           <label id="nombre">Nombre
-            <input type="text" name="nombre" value="<%= product.nombre %>" required>
+            <input type="text" name="nombre" value="<%= product.nombre %>" id="nombre_input">
           </label><br>
 
           <label id="cantidad">Cantidad
-            <input type="number" name="cantidad" value="<%= product.cantidad %>" required>
+            <input type="number" name="cantidad" value="<%= product.cantidad %>" id="cantidad_input">
           </label><br>
 
           <label id="precio_unitario">Precio Unitario$
-            <input type="number" name="precio_unitario" value="<%= product.precio_unitario %>" required>
+            <input type="number" name="precio_unitario" value="<%= product.precio_unitario %>" id="precio_unitario_input">
           </label><br>
 
           <label id="en_stock">
@@ -34,8 +34,49 @@
             </div>
           </label><br>
 
-          <input type="submit" value="Guardar Cambios">
+        <button class="formEntidad__submit" type="button" onclick="actualizarProducto('<%= product.id_producto %>')">Guardar Cambios</button>
       </form>
+
+      <script>
+        async function actualizarProducto(id) {
+          const nombre = document.getElementById('nombre_input').value;
+          const cantidad = document.getElementById('cantidad_input').value;
+          const precio_unitario = document.getElementById('precio_unitario_input').value;
+
+          const radioClasificacion = document.querySelector('input[name="en_stock"]:checked');
+          const en_stock = radioClasificacion ? parseInt(radioClasificacion.value) : null;
+
+          const data = {
+            nombre,
+            cantidad,
+            precio_unitario,
+            en_stock
+          };
+
+          try {
+            const response = await fetch(`/productos/editar/${id}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+              alert("Producto actualizado con éxito");
+              window.location.href = '/productos/todos'; // Redirigir a la lista
+            } else {
+              // Si el servidor responde con 400 mostrar los mensajes de error
+              const mensajesError = result.result.join("\n"); 
+              alert("Error en la validación:\n" + mensajesError);
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            alert("Ocurrió un problema al conectar con el servidor.");
+          }
+        }
+      </script>
+
     </main>
 </body>
 <%-include("../components/footer.ejs")%>

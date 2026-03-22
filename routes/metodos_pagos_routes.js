@@ -4,14 +4,14 @@ const Metodos_Pago_Controller = require('../controllers/metodos_pagos_controller
 const { checkLoginAdmin } = require('../auth/auth');
 
 /* (GET) Mostrar todas los métodos */
-router.get('/mostrar', (req, res) => {
+router.get('/mostrar', checkLoginAdmin, (req, res) => {
   Metodos_Pago_Controller.mostrar_metodos_pago()
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));
 });
 
 /* (GET) Buscar un método por su ID */
-router.get('/buscar/:id', (req, res) => {
+router.get('/buscar/:id', checkLoginAdmin, (req, res) => {
   Metodos_Pago_Controller.mostrar_metodos_pago_por_id(req.params.id)
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));
@@ -40,8 +40,8 @@ router.delete('/eliminar/:id', checkLoginAdmin, function (req, res, next) {
 
 /* VIEWS EJS */
 
-/* (GET) Mostrar todas los categorías */
-router.get('/', function (req, res, next) {
+/* (GET) Mostrar todos los métodos */
+router.get('/', checkLoginAdmin, function (req, res, next) {
   Metodos_Pago_Controller.mostrar_metodos_pago()
     .then((r) => {
       res.render('./metodos_views/metodos', { title: 'Método', metodos_list: r.result });
@@ -56,12 +56,12 @@ router.get('/', function (req, res, next) {
 });
 
 /* (POST) */
-router.get('/ingresar', function (req, res, next) {
+router.get('/ingresar', checkLoginAdmin, function (req, res, next) {
   res.render('./metodos_views/ingresar_metodos', { title: 'Método' });
 });
 
 /* (PUT) Mostrar formulario de edición */
-router.get('/actualizar/:id', function (req, res, next) {
+router.get('/actualizar/:id', checkLoginAdmin, function (req, res, next) {
   Metodos_Pago_Controller.mostrar_metodos_pago_por_id(req.params.id)
     .then((r) => {
 

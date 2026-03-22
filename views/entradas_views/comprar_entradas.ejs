@@ -5,28 +5,16 @@
     <main>
       <h1><%= title %></h1>
 
-      <div class="formEntidad">
-        <div class="row">
-          <label>Método de Pago:</label>
-          <select id="id_metodo">
-            <% metodos_pago_list.forEach(m => { %>
-              <option value="<%= m.id_metodo %>"><%= m.nombre %></option>
-            <% }) %>
-          </select>
-        </div>
-
-        <div id="lista-entradas">
-          <h3>Elegir Entradas</h3>
-          <table class="table">
-            
-           <thead>
-              <tr>
-                <th>Seleccionar</th> <th>ID</th>
-                <th>Película</th>
-                <th>Asiento</th>
-                <th>Fecha Función</th>
-                <th>Precio</th>
-              </tr>
+      <div id="lista-entradas">
+        <table class="table"> 
+          <thead>
+            <tr>
+              <th>Seleccionar</th> <th>ID</th>
+              <th>Película</th>
+              <th>Asiento</th>
+              <th>Fecha Función</th>
+              <th>Precio</th>
+            </tr>
           </thead>
           <tbody>
             <% entradas_list.forEach((e) => { %>
@@ -42,11 +30,21 @@
               </tr>
             <% }); %>
           </tbody>
-
-          </table>
-          <h4>Total Venta: $<span id="total-general">0.00</span></h4>
-          <button class="formEntidad__submit" type="button" onclick="enviarVenta()">Finalizar Venta de Entradas</button>
+        </table>
+      </div>
+      
+      <div class="formEntidad">
+        <div class="row">
+          <label>Método de Pago:</label>
+          <select id="id_metodo">
+            <% metodos_pago_list.forEach(m => { %>
+              <option value="<%= m.id_metodo %>"><%= m.nombre %></option>
+            <% }) %>
+          </select>
         </div>
+
+        <h4>Total Venta: $<span id="total-general">0.00</span></h4>
+        <button class="formEntidad__submit" type="button" onclick="enviarVenta()">Finalizar Venta de Entradas</button>
       </div>
 
     <script>

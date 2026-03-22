@@ -4,14 +4,14 @@ const Categorias_Controller = require('../controllers/categorias_controllers');
 const { checkLoginAdmin } = require('../auth/auth');
 
 /* (GET) Mostrar todas los categorías */
-router.get('/mostrar', (req, res) => {
+router.get('/mostrar', checkLoginAdmin, (req, res) => {
   Categorias_Controller.mostrar_categorias()
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));
 });
 
 /* (GET) Buscar una categoría por su ID */
-router.get('/buscar/:id', (req, res) => {
+router.get('/buscar/:id', checkLoginAdmin, (req, res) => {
   Categorias_Controller.mostrar_categorias_por_id(req.params.id)
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));
@@ -41,7 +41,7 @@ router.delete('/eliminar/:id', checkLoginAdmin, function (req, res, next) {
 /* VIEWS EJS */
 
 /* (GET) Mostrar todas los categorías */
-router.get('/', function (req, res, next) {
+router.get('/', checkLoginAdmin, function (req, res, next) {
   Categorias_Controller.mostrar_categorias()
     .then((r) => {
       res.render('./categorias_views/categorias', { title: 'Categorías', categorias_list: r.result });
@@ -56,12 +56,12 @@ router.get('/', function (req, res, next) {
 });
 
 /* (POST) */
-router.get('/ingresar', function (req, res, next) {
+router.get('/ingresar', checkLoginAdmin, function (req, res, next) {
   res.render('./categorias_views/ingresar_categorias', { title: 'Categorías' });
 });
 
 /* (PUT) Mostrar formulario de edición */
-router.get('/actualizar/:id', function (req, res, next) {
+router.get('/actualizar/:id', checkLoginAdmin, function (req, res, next) {
   Categorias_Controller.mostrar_categorias_por_id(req.params.id)
     .then((r) => {
 

@@ -4,7 +4,7 @@ const Productos_Controller = require('../controllers/productos_controllers');
 const { checkLoginAdmin } = require('../auth/auth');
 
 /* (GET) Mostrar todos los productos */
-router.get('/mostrar', function (req, res, next) {
+router.get('/mostrar', checkLoginAdmin, function (req, res, next) {
   Productos_Controller.mostrar_productos()
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));
@@ -47,8 +47,23 @@ router.delete('/eliminar/:id', checkLoginAdmin, function (req, res, next) {
 
 /* VIEWS EJS */
 
-/* (GET) */
+/* (GET) productos en sotck */
 router.get('/', function (req, res, next) {
+  Productos_Controller.mostrar_productos_en_stock()
+    .then((r) => {
+      res.render('./productos_views/productos_en_stock', { title: 'Productos', productos_list: r.result });
+    })
+    .catch(err => {
+      res.status(500).render('error', {
+        title: 'Error del Servidor',
+        code: 500,
+        message: 'No pudimos conectar con la base de datos'
+      });
+    });
+});
+
+/* (GET) Mostrar todos los productos incluso los que no estan en stock */
+router.get('/todos', checkLoginAdmin, function (req, res, next) {
   Productos_Controller.mostrar_productos()
     .then((r) => {
       res.render('./productos_views/productos', { title: 'Productos', productos_list: r.result });
@@ -63,12 +78,12 @@ router.get('/', function (req, res, next) {
 });
 
 /* (POST) */
-router.get('/ingresar', function (req, res, next) {
+router.get('/ingresar', checkLoginAdmin, function (req, res, next) {
   res.render('./productos_views/ingresar_productos', { title: 'Productos' });
 });
 
 /* (PUT) Mostrar formulario de edición */
-router.get('/actualizar/:id', function (req, res, next) {
+router.get('/actualizar/:id', checkLoginAdmin, function (req, res, next) {
   Productos_Controller.mostrar_productos_por_id(req.params.id)
     .then((r) => {
       

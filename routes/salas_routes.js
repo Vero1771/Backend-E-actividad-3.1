@@ -56,12 +56,12 @@ router.get('/', function (req, res, next) {
 });
 
 /* (POST) */
-router.get('/ingresar', function (req, res, next) {
+router.get('/ingresar', checkLoginAdmin, function (req, res, next) {
   res.render('./salas_views/ingresar_salas', { title: 'Salas' });
 });
 
 /* (PUT) Mostrar formulario de edición */
-router.get('/actualizar/:id', function (req, res, next) {
+router.get('/actualizar/:id', checkLoginAdmin, function (req, res, next) {
   Salas_Controller.mostrar_salas_por_id(req.params.id)
     .then((r) => {
 

@@ -4,6 +4,9 @@ class EntradasController {
   static mostrar_entradas() {
     return Entradas_Model.mostrar_entradas().then(r => r).catch(err => err);
   }
+  static mostrar_entradas_vendidas() {
+    return Entradas_Model.mostrar_entradas_vendidas().then(r => r).catch(err => err);
+  }
   static mostrar_entradas_no_vendidas() {
     return Entradas_Model.mostrar_entradas_no_vendidas().then(r => r).catch(err => err);
   }

@@ -8,7 +8,7 @@ class VentasProductosModel {
       if (venta[campo] === undefined || venta[campo] === null) errors.push(`El campo ${campo} es obligatorio`);
     }
 
-    if (isNaN(venta.id_metodo) || venta.id_metodo < 0) {
+    if (isNaN(venta.id_metodo) || venta.id_metodo <= 0) {
       errors.push("El id del método de pago debe ser un número válido");
     }
 
@@ -29,11 +29,11 @@ class VentasProductosModel {
         if (p[campo] === undefined || p[campo] === null) errors_details.push(`El campo ${campo} es obligatorio`);
       }
 
-      if (isNaN(p.id_producto) || p.id_producto < 0) {
+      if (isNaN(p.id_producto) || p.id_producto <= 0) {
         errors_details.push("El id del producto deben ser un número válido");
       }
 
-      if (isNaN(p.cantidad) || p.cantidad < 0 || isNaN(p.subtotal) || p.subtotal < 0) {
+      if (isNaN(p.cantidad) || p.cantidad <= 0 || isNaN(p.subtotal) || p.subtotal <= 0) {
         errors.push("El subtotal y la cantidad deben ser un números válidos y no puede ser negativos");
       }
 
@@ -56,11 +56,11 @@ class VentasProductosModel {
       if (producto[campo] === undefined || producto[campo] === null) errors.push(`El campo ${campo} es obligatorio`);
     }
 
-    if (isNaN(producto.id_producto) || producto.id_producto < 0) {
+    if (isNaN(producto.id_producto) || producto.id_producto <= 0) {
       errors.push("El id del producto debe ser un número válido");
     }
 
-    if (isNaN(producto.cantidad) || producto.cantidad < 0 || isNaN(producto.subtotal) || producto.subtotal < 0) {
+    if (isNaN(producto.cantidad) || producto.cantidad <= 0 || isNaN(producto.subtotal) || producto.subtotal <= 0) {
       errors.push("El subtotal y la cantidad deben ser un números válidos y no puede ser negativos");
     }
 
@@ -77,7 +77,7 @@ class VentasProductosModel {
   }
   static mostrar_productos_vendidos() {
     return new Promise((resolve, reject) => {
-      pool.query('SELECT ventas_productos.id_venta_producto, productos.id_producto, productos.nombre AS "producto", productos.precio_unitario, ventas_productos.cantidad, ventas.id_venta, metodos_pago.nombre AS "metodo_pago", ventas.fecha, ventas.total FROM `ventas_productos` JOIN `productos` ON productos.id_producto = ventas_productos.id_producto JOIN `ventas` ON ventas.id_venta = ventas_productos.id_venta JOIN `metodos_pago` ON metodos_pago.id_metodo = ventas.id_metodo ORDER BY ventas_productos.id_venta_producto;')
+      pool.query('SELECT ventas_productos.id_venta_producto, ventas_productos.subtotal, productos.id_producto, productos.nombre AS "producto", productos.precio_unitario, ventas_productos.cantidad, ventas.id_venta, metodos_pago.nombre AS "metodo_pago", ventas.fecha, ventas.total FROM `ventas_productos` JOIN `productos` ON productos.id_producto = ventas_productos.id_producto JOIN `ventas` ON ventas.id_venta = ventas_productos.id_venta JOIN `metodos_pago` ON metodos_pago.id_metodo = ventas.id_metodo ORDER BY ventas_productos.id_venta_producto;')
         .then(([rows]) => {
           resolve({ code: 200, message: "consulta completada con éxito", result: rows })
         })
@@ -88,7 +88,7 @@ class VentasProductosModel {
   }
   static mostrar_productos_vendidos_por_id(id) {
     return new Promise((resolve, reject) => {
-      pool.query('SELECT ventas_productos.id_venta_producto, productos.id_producto, productos.nombre AS "producto", productos.precio_unitario, ventas_productos.cantidad, ventas.id_venta, metodos_pago.nombre AS "metodo_pago", ventas.fecha, ventas.total FROM `ventas_productos` JOIN `productos` ON productos.id_producto = ventas_productos.id_producto JOIN `ventas` ON ventas.id_venta = ventas_productos.id_venta JOIN `metodos_pago` ON metodos_pago.id_metodo = ventas.id_metodo WHERE id_venta_producto = ?', id)
+      pool.query('SELECT ventas_productos.id_venta_producto, ventas_productos.subtotal, productos.id_producto, productos.nombre AS "producto", productos.precio_unitario, ventas_productos.cantidad, ventas.id_venta, metodos_pago.nombre AS "metodo_pago", ventas.fecha, ventas.total FROM `ventas_productos` JOIN `productos` ON productos.id_producto = ventas_productos.id_producto JOIN `ventas` ON ventas.id_venta = ventas_productos.id_venta JOIN `metodos_pago` ON metodos_pago.id_metodo = ventas.id_metodo WHERE id_venta_producto = ?', id)
         .then(([rows]) => {
           if (rows.length > 0) {
             resolve({ code: 200, message: "consulta completada con éxito", result: rows })
@@ -102,7 +102,7 @@ class VentasProductosModel {
   }
   static mostrar_productos_vendidos_de_un_usuario(id_usuario) {
     return new Promise((resolve, reject) => {
-      pool.query('SELECT ventas.id_usuario, ventas_productos.id_venta_producto, productos.id_producto, productos.nombre AS "producto", productos.precio_unitario, ventas_productos.cantidad, ventas.id_venta, metodos_pago.nombre AS "metodo_pago", ventas.fecha, ventas.total FROM `ventas_productos` JOIN `productos` ON productos.id_producto = ventas_productos.id_producto JOIN `ventas` ON ventas.id_venta = ventas_productos.id_venta JOIN `metodos_pago` ON metodos_pago.id_metodo = ventas.id_metodo WHERE ventas.id_usuario = ?', id_usuario)
+      pool.query('SELECT ventas.id_usuario, ventas_productos.id_venta_producto,ventas_productos.subtotal, productos.id_producto, productos.nombre AS "producto", productos.precio_unitario, ventas_productos.cantidad, ventas.id_venta, metodos_pago.nombre AS "metodo_pago", ventas.fecha, ventas.total FROM `ventas_productos` JOIN `productos` ON productos.id_producto = ventas_productos.id_producto JOIN `ventas` ON ventas.id_venta = ventas_productos.id_venta JOIN `metodos_pago` ON metodos_pago.id_metodo = ventas.id_metodo WHERE ventas.id_usuario = ?', id_usuario)
         .then(([rows]) => {
           if (rows.length > 0) {
             resolve({ code: 200, message: "consulta completada con éxito", result: rows })

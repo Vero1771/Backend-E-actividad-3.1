@@ -8,7 +8,7 @@ class VentasModel {
       if (venta[campo] === undefined || venta[campo] === null) errors.push(`El campo ${campo} es obligatorio`);
     }
 
-    if (isNaN(venta.id_metodo) || venta.id_metodo < 0 || isNaN(venta.total) || venta.total < 0) {
+    if (isNaN(venta.id_metodo) || venta.id_metodo <= 0 || isNaN(venta.total) || venta.total <= 0) {
       errors.push("El total de la venta y el id del método de pago deben ser números válidos");
     }
 

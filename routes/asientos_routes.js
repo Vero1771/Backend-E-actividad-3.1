@@ -4,14 +4,14 @@ const Asientos_Controller = require('../controllers/asientos_controllers');
 const { checkLoginAdmin } = require('../auth/auth');
 
 /* (GET) Mostrar todos los asientos */
-router.get('/mostrar', (req, res) => {
+router.get('/mostrar', checkLoginAdmin, (req, res) => {
   Asientos_Controller.mostrar_asientos()
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));
 });
 
 /* (GET) Buscar un asiento por su ID */
-router.get('/buscar/:id', (req, res) => {
+router.get('/buscar/:id', checkLoginAdmin, (req, res) => {
   Asientos_Controller.mostrar_asientos_por_id(req.params.id)
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));
@@ -41,7 +41,7 @@ router.delete('/eliminar/:id', checkLoginAdmin, function (req, res, next) {
 /* VIEWS EJS */
 
 /* (GET) Todos los asientos */
-router.get('/', function (req, res, next) {
+router.get('/', checkLoginAdmin, function (req, res, next) {
   Asientos_Controller.mostrar_asientos()
     .then((r) => {
       res.render('./asientos_views/asientos', { title: 'Asientos', asientos_list: r.result });
@@ -56,12 +56,12 @@ router.get('/', function (req, res, next) {
 });
 
 /* (POST) */
-router.get('/ingresar', function (req, res, next) {
+router.get('/ingresar', checkLoginAdmin, function (req, res, next) {
   res.render('./asientos_views/ingresar_asientos', { title: 'Asientos' });
 });
 
 /* (PUT) Mostrar formulario de edición */
-router.get('/actualizar/:id', function (req, res, next) {
+router.get('/actualizar/:id', checkLoginAdmin, function (req, res, next) {
   Asientos_Controller.mostrar_asientos_por_id(req.params.id)
     .then((r) => {
 

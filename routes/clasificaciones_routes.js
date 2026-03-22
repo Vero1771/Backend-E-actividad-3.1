@@ -4,14 +4,14 @@ const Clasificaciones_Controller = require('../controllers/clasificaciones_contr
 const { checkLoginAdmin } = require('../auth/auth');
 
 /* (GET) Mostrar todas los clasificaciones */
-router.get('/mostrar', (req, res) => {
+router.get('/mostrar', checkLoginAdmin, (req, res) => {
   Clasificaciones_Controller.mostrar_clasificaciones()
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));
 });
 
 /* (GET) Buscar una clasificación por su ID */
-router.get('/buscar/:id', (req, res) => {
+router.get('/buscar/:id', checkLoginAdmin, (req, res) => {
   Clasificaciones_Controller.mostrar_clasificaciones_por_id(req.params.id)
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));
@@ -41,7 +41,7 @@ router.delete('/eliminar/:id', checkLoginAdmin, function (req, res, next) {
 /* VIEWS EJS */
 
 /* (GET) Mostrar todas los categorías */
-router.get('/', function (req, res, next) {
+router.get('/', checkLoginAdmin, function (req, res, next) {
   Clasificaciones_Controller.mostrar_clasificaciones()
     .then((r) => {
       res.render('./clasificaciones_views/clasificaciones', { title: 'Clasificación', clasificaciones_list: r.result });
@@ -56,12 +56,12 @@ router.get('/', function (req, res, next) {
 });
 
 /* (POST) */
-router.get('/ingresar', function (req, res, next) {
+router.get('/ingresar', checkLoginAdmin, function (req, res, next) {
   res.render('./clasificaciones_views/ingresar_clasificaciones', { title: 'Clasificación' });
 });
 
 /* (PUT) Mostrar formulario de edición */
-router.get('/actualizar/:id', function (req, res, next) {
+router.get('/actualizar/:id', checkLoginAdmin, function (req, res, next) {
   Clasificaciones_Controller.mostrar_clasificaciones_por_id(req.params.id)
     .then((r) => {
 

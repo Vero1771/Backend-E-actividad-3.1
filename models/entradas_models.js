@@ -8,7 +8,7 @@ class EntradasModel {
       if (entrada[campo] === undefined || entrada[campo] === null) errors.push(`El campo ${campo} es obligatorio`);
     }
 
-    if (isNaN(entrada.id_funcion) || entrada.id_funcion < 0 || isNaN(entrada.id_asiento) || entrada.id_asiento < 0) {
+    if (isNaN(entrada.id_funcion) || entrada.id_funcion <= 0 || isNaN(entrada.id_asiento) || entrada.id_asiento <= 0) {
       errors.push("El id de la función, y el id del asiento deben ser números válidos");
     }
 
@@ -29,7 +29,7 @@ class EntradasModel {
         if (entrada[campo] === undefined || entrada[campo] === null) errors.push(`El campo ${campo} es obligatorio`);
       }
 
-      if (isNaN(entrada.id_funcion) || entrada.id_funcion < 0 || isNaN(entrada.id_asiento) || entrada.id_asiento < 0) {
+      if (isNaN(entrada.id_funcion) || entrada.id_funcion <= 0 || isNaN(entrada.id_asiento) || entrada.id_asiento <= 0) {
         errors.push("El id de la función, y el id del asiento deben ser números válidos");
       }
 
@@ -56,7 +56,7 @@ class EntradasModel {
       if (venta[campo] === undefined || venta[campo] === null) errors.push(`El campo ${campo} es obligatorio`);
     }
 
-    if (isNaN(venta.id_metodo) || venta.id_metodo < 0) {
+    if (isNaN(venta.id_metodo) || venta.id_metodo <= 0) {
       errors.push("El id del método de pago debe ser un número válido");
     }
 
@@ -78,6 +78,17 @@ class EntradasModel {
     return total;
   }
   static mostrar_entradas() {
+    return new Promise((resolve, reject) => {
+      pool.query('SELECT entradas.id_entrada, peliculas.titulo As "pelicula", salas.nombre As "sala", asientos.id_asiento, asientos.nombre As "asiento", funciones.id_funcion, funciones.fecha_hora As "fecha_funcion", entradas.precio FROM `entradas` JOIN `funciones` ON entradas.id_funcion = funciones.id_funcion JOIN `peliculas` ON peliculas.id_pelicula = funciones.id_pelicula JOIN `salas` ON salas.id_sala = funciones.id_sala JOIN `asientos` ON entradas.id_asiento = asientos.id_asiento ORDER BY entradas.id_entrada;')
+        .then(([rows]) => {
+          resolve({ code: 200, message: "consulta completada con éxito", result: rows })
+        })
+        .catch(err =>
+          reject({ code: 500, message: err.message, result: [err] })
+        );
+    });
+  }
+  static mostrar_entradas_vendidas() {
     return new Promise((resolve, reject) => {
       pool.query('SELECT entradas.id_entrada, peliculas.titulo As "pelicula", salas.nombre As "sala", asientos.id_asiento, asientos.nombre As "asiento", funciones.id_funcion, funciones.fecha_hora As "fecha_funcion", ventas.id_venta, ventas.fecha As "fecha_venta", entradas.precio FROM `entradas` JOIN `funciones` ON entradas.id_funcion = funciones.id_funcion JOIN `peliculas` ON peliculas.id_pelicula = funciones.id_pelicula JOIN `salas` ON salas.id_sala = funciones.id_sala JOIN `asientos` ON entradas.id_asiento = asientos.id_asiento JOIN `ventas` ON entradas.id_venta = ventas.id_venta ORDER BY entradas.id_entrada;')
         .then(([rows]) => {

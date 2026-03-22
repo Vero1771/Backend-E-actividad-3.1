@@ -3,21 +3,50 @@
   <body>
     <%-include("../components/nav.ejs")%>
       <main>
-        <h1><%= title %>: <%= sala.nombre %></h1>
+        <h1><%= title %>: <%= sala.nombre %></h1> 
 
-        <form class="formEntidad" action="/salas/editar/<%= sala.id_sala %>?_method=PUT"  method="post">
-
-          <label id="nombre">Nombre
-            <input type="text" name="nombre" value="<%= sala.nombre %>" required>
+        <form class="formEntidad" id="formEditarSala">
+          <label>Nombre
+            <input type="text" id="nombre_input" name="nombre" value="<%= sala.nombre %>"> 
           </label><br>
 
-          <label id="capacidad">Capacidad
-            <input type="number" name="capacidad" value="<%= sala.capacidad %>" required>
+          <label>Capacidad
+            <input type="number" id="capacidad_input" name="capacidad" value="<%= sala.capacidad %>"> 
           </label><br>
 
-          <input type="submit"  value="Guardar Cambios">
-
+          <button class="formEntidad__submit" type="button" onclick="actualizarSala('<%= sala.id_sala %>')">Guardar Cambios</button>
         </form>
+
+        <script>
+          async function actualizarSala(id) {
+            const data = {
+              nombre: document.getElementById('nombre_input').value,
+              capacidad: parseInt(document.getElementById('capacidad_input').value)
+            };
+
+            try {
+              const response = await fetch(`/salas/editar/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+              });
+
+              const result = await response.json();
+
+              if (response.ok) {
+                alert("Sala actualizada con éxito");
+                window.location.href = '/salas'; // Redirigir a la lista
+              } else {
+                // Si el servidor responde con 400 mostrar los mensajes de error
+                const mensajesError = result.result.join("\n"); 
+                alert("Error en la validación:\n" + mensajesError);
+              }
+            } catch (error) {
+              console.error("Error:", error);
+              alert("Ocurrió un problema al conectar con el servidor.");
+            }
+          }
+        </script>
       </main>
   </body>
 

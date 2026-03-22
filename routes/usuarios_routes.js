@@ -1,9 +1,10 @@
 var express = require('express');
 var router = express.Router();
 const Usuarios_Controller = require('../controllers/usuarios_controllers');
+const { checkLoginUser, checkLoginAdmin } = require('../auth/auth');
 
 /* (GET) Mostrar todas los usuarios */
-router.get('/mostrar', (req, res) => {
+router.get('/mostrar', checkLoginAdmin, (req, res) => {
   Usuarios_Controller.mostrar_usuarios()
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));
@@ -24,7 +25,7 @@ router.post('/ingresar', (req, res) => {
 });
 
 /* (POST) Ingresar admins */
-router.post('/ingresar_admin', (req, res) => {
+router.post('/ingresar_admin', checkLoginAdmin, (req, res) => {
   Usuarios_Controller.ingresar_usuario_admin(req.body)
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));
@@ -39,22 +40,22 @@ router.post('/login', (req, res) => {
           httpOnly: true, 
           maxAge: 3600000
         });
-        return res.status(r.code).json(r);
+        return res.status(200).json(r);
       }
-      res.render('login', { error: r.message });
+      res.status(r.code).json(r);
     })
     .catch(err => res.status(err.code).json(err));
 });
 
 /* (PUT) Editar usuarios */
-router.put('/editar/:id', function (req, res, next) {
+router.put('/editar/:id', checkLoginAdmin, function (req, res, next) {
   Usuarios_Controller.editar_usuario(req.params.id, req.body)
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));
 });
 
 /* (DELETE) Eliminar usuarios por su ID */
-router.delete('/eliminar/:id', function (req, res, next) {
+router.delete('/eliminar/:id', checkLoginAdmin, function (req, res, next) {
   Usuarios_Controller.eliminar_usuario(req.params.id)
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));
@@ -63,7 +64,7 @@ router.delete('/eliminar/:id', function (req, res, next) {
 /* VIEWS EJS */
 
 /* (GET) Todos los usuarios */
-router.get('/', function (req, res, next) {
+router.get('/', checkLoginAdmin, function (req, res, next) {
   Usuarios_Controller.mostrar_usuarios()
     .then((r) => {
       res.render('./usuarios_views/usuarios', { title: 'Usuarios', usuarios_list: r.result });
@@ -83,7 +84,7 @@ router.get('/ingresar', function (req, res, next) {
 });
 
 /* (POST) */
-router.get('/ingresar_admin', function (req, res, next) {
+router.get('/ingresar_admin', checkLoginAdmin, function (req, res, next) {
   res.render('./usuarios_views/ingresar_admins', { title: 'Admins' });
 });
 
@@ -93,7 +94,7 @@ router.get('/login', function (req, res, next) {
 });
 
 /* (PUT) Mostrar formulario de edición */
-router.get('/actualizar/:id', function (req, res, next) {
+router.get('/actualizar/:id', checkLoginAdmin, function (req, res, next) {
   Usuarios_Controller.mostrar_usuarios_por_id(req.params.id)
     .then((r) => {
 
@@ -117,6 +118,12 @@ router.get('/actualizar/:id', function (req, res, next) {
         message: 'No pudimos conectar con la base de datos'
       });
     });
+});
+
+/* (GET) Finalizar sesión */
+router.get('/logout', (req, res) => {
+  res.clearCookie('token'); // Eliminamos la cookie
+  res.redirect('/usuarios/login'); // Redirigimos al login
 });
 
 module.exports = router;

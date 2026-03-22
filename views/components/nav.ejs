@@ -4,21 +4,29 @@
 
     <li class="dropdown">
       <a href="/peliculas/">Películas</a>
-      <ul class="dropdown-content">
-        <li><a href="/peliculas/ingresar">Ingresar películas</a></li>
-        <li><a href="/categorias/">Categorías</a></li>
-        <li><a href="/categorias/ingresar">Ingresar Categoría</a></li>
-        <li><a href="/clasificaciones/">Clasificaciones</a></li>
-        <li><a href="/clasificaciones/ingresar">Ingresar Clasificación</a></li>
-      </ul>
+      <% if (user && user.rol === 'admin') { %>
+        <ul class="dropdown-content">
+          <li><a href="/peliculas/ingresar">Ingresar películas</a></li>
+          <li><a href="/categorias/">Categorías</a></li>
+          <li><a href="/categorias/ingresar">Ingresar Categoría</a></li>
+          <li><a href="/clasificaciones/">Clasificaciones</a></li>
+          <li><a href="/clasificaciones/ingresar">Ingresar Clasificación</a></li>
+        </ul>
+      <% } %>
     </li>
 
     <li class="dropdown">
       <a href="/productos/">Productos</a>
       <ul class="dropdown-content">
-        <li><a href="/productos/ingresar">Ingresar Productos</a></li>
+        <% if (user && user.rol === 'admin') { %>
+          <li><a href="/productos/todos">Todos los Productos</a></li>
+          <li><a href="/productos/ingresar">Ingresar Productos</a></li>
+        <% } %>
+
+        <% if (user && user.rol === 'user') { %>
         <li><a href="/ventas_productos/ingresar">Comprar Productos</a></li>
         <li><a href="/ventas_productos/tus_productos">Tus Productos</a></li>
+        <% } %>
       </ul>
     </li>
 
@@ -26,50 +34,77 @@
       <a href="/funciones/">Funciones</a>
       <ul class="dropdown-content">
         <li><a href="/funciones/recientes">Funciones Recientes</a></li>
-        <li><a href="/funciones/ingresar">Ingresar Funciones</a></li>
+        <% if (user && user.rol === 'admin') { %>
+          <li><a href="/funciones/ingresar">Ingresar Funciones</a></li>
+        <% } %>
       </ul>
     </li>
 
     <li class="dropdown">
       <a href="/salas/">Salas</a>
-      <ul class="dropdown-content">
-        <li><a href="/salas/ingresar">Ingresar Salas</a></li>
-      </ul>
+      <% if (user && user.rol === 'admin') { %>
+        <ul class="dropdown-content">
+          <li><a href="/salas/ingresar">Ingresar Salas</a></li>
+        </ul>
+      <% } %>
     </li>
 
     <li class="dropdown">
-      <a href="/entradas/">Entradas</a>
+      <% if (user && user.rol === 'admin') { %>
+        <a href="/entradas/">Entradas</a>
+      <% } else { %>
+        <a href="/entradas/disponibles">Entradas</a>
+      <% } %>
+
       <ul class="dropdown-content">
-        <li><a href="/entradas/sin_vender">Entradas sin Vender</a></li>
-        <li><a href="/entradas/ingresar">Ingresar Entradas</a></li>
-        <li><a href="/entradas/comprar">Comprar Entradas</a></li>
-        <li><a href="/entradas/tus_entradas">Tus Entradas</a></li>
-        <li><a href="/asientos/">Asientos</a></li>
-        <li><a href="/asientos/ingresar">Ingresar Asiento</a></li>
+
+        <% if (user && user.rol === 'user') { %>
+          <li><a href="/entradas/comprar">Comprar Entradas</a></li>
+          <li><a href="/entradas/tus_entradas">Tus Entradas</a></li>
+        <% } %>
+
+        <% if (user && user.rol === 'admin') { %>
+          <li><a href="/entradas/disponibles">Disponibles</a></li>
+          <li><a href="/entradas/entradas_vendidas">Vendidas</a></li>
+          <li><a href="/entradas/ingresar">Ingresar Entradas</a></li>  
+          <li><a href="/asientos/">Asientos</a></li>
+          <li><a href="/asientos/ingresar">Ingresar Asiento</a></li>
+        <% } %>
       </ul>
     </li>
 
-    <li class="dropdown">
-      <a href="/ventas/">Ventas</a>
-      <ul class="dropdown-content">
-        <li><a href="/ventas_productos/">Ventas de Productos</a></li>
-        <li><a href="/ventas/ver-rango/">Ventas por Rango</a></li>
-        <li> <a href="/metodos/">Métodos de Pago</a></li>
-        <li><a href="/metodos/ingresar">Ingresar Método</a></li>
-      </ul>
-    </li>
+    <% if (user && user.rol === 'admin') { %>
+      <li class="dropdown">
+        <a href="/ventas/">Ventas</a>
+        <ul class="dropdown-content">
+          <li><a href="/ventas_productos/">Ventas de Productos</a></li>
+          <li><a href="/ventas/ver-rango/">Ventas por Rango</a></li>
+          <li> <a href="/metodos/">Métodos de Pago</a></li>
+          <li><a href="/metodos/ingresar">Ingresar Método</a></li>
+        </ul>
+      </li>
+    <% } %>
 
-    <li class="dropdown">
-      <a href="/usuarios">Usuarios</a>
-      <ul class="dropdown-content">
-        <li><a href="/usuarios/ingresar">Ingresar Usuarios</a></li>
-        <li><a href="/usuarios/ingresar_admin">Ingresar Admins</a></li>
-      </ul>
-    </li>
+    <% if (user && user.rol === 'admin') { %>
+      <li class="dropdown">
+        <a href="/usuarios">Usuarios</a>
+        <ul class="dropdown-content">
+          <li><a href="/usuarios/ingresar">Ingresar Usuarios</a></li>
+          <li><a href="/usuarios/ingresar_admin">Ingresar Admins</a></li>
+        </ul>
+      </li>
+    <% } %>
 
-    <li class="dropdown">
-      <a href="/usuarios/login">Login</a>
-    </li>
+    <% if (user) { %>
+      <li class="dropdown">
+        <a href="/usuarios/logout">Salir</a>
+      </li>
+    <% } else { %>
+      <li class="dropdown">
+        <a href="/usuarios/ingresar">Regístrate</a>
+        <a href="/usuarios/login">Login</a>
+      </li>
+    <% } %>
 
   </ul>
 </nav>

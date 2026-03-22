@@ -8,7 +8,7 @@ class AsientosModel {
       if (asiento[campo] === undefined || asiento[campo] === null) errors.push(`El campo ${campo} es obligatorio`);
     }
 
-    if (typeof(asiento.nombre) !== "string") {
+    if (typeof(asiento.nombre) !== "string" || asiento.nombre == "") {
       errors.push("El nombre del asiento debe ser una cadena de texto");
     }
 

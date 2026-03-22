@@ -8,7 +8,7 @@ class ProductosModel {
       if (producto[campo] === undefined || producto[campo] === null) errors.push(`El campo ${campo} es obligatorio`);
     }
 
-    if (typeof (producto.nombre) !== "string") {
+    if (typeof (producto.nombre) !== "string" || producto.nombre == "") {
       errors.push("El nombre del producto debe ser una cadena de texto");
     }
 

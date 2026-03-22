@@ -5,14 +5,14 @@ const Metodos_Pagos_Controller = require('../controllers/metodos_pagos_controlle
 const { checkLoginAdmin } = require('../auth/auth');
 
 /* (GET) Mostrar todas las ventas */
-router.get('/mostrar', (req, res) => {
+router.get('/mostrar', checkLoginAdmin, (req, res) => {
   Ventas_Controller.mostrar_ventas()
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));
 });
 
 /* (GET) Buscar una sala por su ID */
-router.get('/buscar/:id', (req, res) => {
+router.get('/buscar/:id', checkLoginAdmin, (req, res) => {
   Ventas_Controller.mostrar_ventas_por_id(req.params.id)
     .then(r => res.status(r.code).json(r))
     .catch(err => res.status(err.code).json(err));
@@ -51,7 +51,7 @@ router.delete('/eliminar/:id', checkLoginAdmin, function (req, res, next) {
 /* VIEWS EJS */
 
 /* (GET) Todas las ventas */
-router.get('/', function (req, res, next) {
+router.get('/', checkLoginAdmin, function (req, res, next) {
   Ventas_Controller.mostrar_ventas()
     .then((r) => {
       res.render('./ventas_views/ventas', { title: 'Ventas', ventas_list: r.result });
@@ -66,7 +66,7 @@ router.get('/', function (req, res, next) {
 });
 
 /* (GET) Vista de ventas filtradas por rango */
-router.get('/ver-rango', function (req, res) {
+router.get('/ver-rango', checkLoginAdmin, function (req, res) {
   const { inicio, fin } = req.query;
 
   if (!inicio || !fin) {
@@ -95,7 +95,7 @@ router.get('/ver-rango', function (req, res) {
 });
 
 /* (PUT) Mostrar formulario de edición */
-router.get('/actualizar/:id', function (req, res, next) {
+router.get('/actualizar/:id', checkLoginAdmin, function (req, res, next) {
   Metodos_Pagos_Controller.mostrar_metodos_pago()
     .then((metodos_pago) => {
       Ventas_Controller.mostrar_ventas_por_id(req.params.id)

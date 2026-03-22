@@ -18,6 +18,7 @@
                   <th>Método de Pago</th>
                   <th>Fecha</th>
                   <th>Producto</th>
+                  <th>Precio Unitario</th>
                   <th>Cantidad</th>
                   <th>SubTotal</th>
                   <th>Total</th>
@@ -32,21 +33,51 @@
                     <td><%= v.metodo_pago %></td>
                     <td><%= v.fecha.toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' }) %></td>
                     <td><%= v.producto %></td>
-                    <td><%= v.cantidad %></td>
                     <td><%= v.precio_unitario %></td>
+                    <td><%= v.cantidad %></td>
+                    <td><%= v.subtotal %></td>
                     <td><%= v.total %></td>
                     <td>    
                       <div class="botonera">
                         <a class="botonera__opcion opcion__editar" href="/ventas_productos/actualizar/<%= v.id_venta_producto %>" class="button">Editar</a>
-                        <form class="botonera__opcion" action="/ventas_productos/eliminar/<%= v.id_venta_producto %>/?_method=DELETE" method="post" onsubmit="return confirm('¿Estás seguro de eliminar esta venta?');">
-                          <input class="opcion__eliminar" type="submit" class="button" value="X">
-                        </form>
+                        <button class="botonera__opcion opcion__eliminar" onclick="eliminarVenta(this, '<%= v.id_venta_producto %>')"> X </button>
                       </div>
                     </td>
                   </tr>
               <% }); %>
           </tbody>
       </table>
+
+      <script>
+        async function eliminarVenta(boton, id) {
+          if (!confirm('¿Estás seguro de eliminar esta venta?')) return;
+
+          try {
+            const response = await fetch(`/ventas_productos/eliminar/${id}`, {
+              method: 'DELETE', 
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            });
+
+            if (response.ok) {
+              const fila = boton.closest('tr'); //eliminar la fila de la tabla sin recargar
+              fila.remove();
+                    
+              const tbody = document.querySelector('tbody');
+              if (tbody.children.length === 0) {
+                location.reload(); 
+              }
+            } else {
+              alert('Error al eliminar la venta');
+            }
+          } catch (error) {
+            console.error('Error:', error);
+            alert('Hubo un problema con la conexión');
+          }
+        }
+      </script>
+
     </main>
 
   </body>

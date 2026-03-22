@@ -4,17 +4,17 @@
     <main>
       <h1><%= title %>: <%= peli.titulo %></h1>
 
-      <form class="formEntidad" action="/peliculas/editar/<%= peli.id_pelicula %>?_method=PUT" method="post">
+      <form class="formEntidad" id="formEditarPelicula">
           <label>Título
-              <input type="text" name="titulo" value="<%= peli.titulo %>" required>
+              <input id="titulo_input" type="text" name="titulo" value="<%= peli.titulo %>">
           </label><br>
 
           <label>Año
-              <input type="number" name="anio" value="<%= peli.anio %>" required>
+              <input id="anio_input" type="number" name="anio" value="<%= peli.anio %>">
           </label><br>
 
           <label>Duración
-              <input type="number" name="duracion" value="<%= peli.duracion %>" required>
+              <input id="duracion_input" type="number" name="duracion" value="<%= peli.duracion %>">
           </label><br>
 
           <div>
@@ -51,8 +51,54 @@
               <% } %>
           </div>
 
-          <input type="submit" value="Guardar Cambios">
+        <button class="formEntidad__submit" type="button" onclick="actualizarPelicula('<%= peli.id_pelicula %>')">Guardar Cambios</button>
+
       </form>
+
+      <script>
+        async function actualizarPelicula(id) {
+          const titulo = document.getElementById('titulo_input').value;
+          const anio = document.getElementById('anio_input').value;
+          const duracion = document.getElementById('duracion_input').value;
+
+          const radioClasificacion = document.querySelector('input[name="id_clasificacion"]:checked');
+          const id_clasificacion = radioClasificacion ? parseInt(radioClasificacion.value) : null;
+
+          const checkboxesCategorias = document.querySelectorAll('input[name="categorias"]:checked');
+          const categorias = Array.from(checkboxesCategorias).map(cb => parseInt(cb.value));
+
+          const data = {
+            titulo,
+            anio,
+            duracion,
+            id_clasificacion,
+            categorias
+          };
+
+          try {
+            const response = await fetch(`/peliculas/editar/${id}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+              alert("Película actualizada con éxito");
+              window.location.href = '/peliculas'; // Redirigir a la lista
+            } else {
+              // Si el servidor responde con 400 mostrar los mensajes de error
+              const mensajesError = result.result.join("\n"); 
+              alert("Error en la validación:\n" + mensajesError);
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            alert("Ocurrió un problema al conectar con el servidor.");
+          }
+        }
+      </script>
+
     </main>
 </body>
 <%-include("../components/footer.ejs")%>

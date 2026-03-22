@@ -18,7 +18,9 @@
                   <th>Duración</th>
                   <th>Categorías</th>
                   <th>Clasificación</th>
-                  <th>Administrar</th>
+                  <% if (user && user.rol === 'admin') { %>
+                    <th>Administrar</th>
+                  <% } %>
               </tr>
           </thead>
           <tbody>
@@ -38,18 +40,51 @@
                         <% }); %>
                       </td>
                       <td><%= peli.clasificacion %></td>
-                      <td>    
-                        <div class="botonera">
-                          <a class="botonera__opcion opcion__editar" href="/peliculas/actualizar/<%= peli.id_pelicula %>" class="button">Editar</a>
-                          <form class="botonera__opcion" action="/peliculas/eliminar/<%= peli.id_pelicula %>/?_method=DELETE" method="post" onsubmit="return confirm('¿Estás seguro de eliminar esta película?');">
-                            <input class="opcion__eliminar" type="submit" class="button" value="X">
-                          </form>
-                        </div>
-                      </td>
+
+                      <% if (user && user.rol === 'admin') { %>
+                        <td>    
+                          <div class="botonera">
+                            <a class="botonera__opcion opcion__editar" href="/peliculas/actualizar/<%= peli.id_pelicula %>" class="button">Editar</a>                        
+                            <button class="botonera__opcion opcion__eliminar" onclick="eliminarPelicula(this, '<%= peli.id_pelicula %>')"> X </button> 
+                          </div>
+                        </td>
+                      <% } %>
+
                   </tr>
               <% }); %>
           </tbody>
       </table>
+
+        <script>
+        async function eliminarPelicula(boton, id) {
+          if (!confirm('¿Estás seguro de eliminar esta película?')) return;
+
+          try {
+            const response = await fetch(`/peliculas/eliminar/${id}`, {
+              method: 'DELETE', 
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            });
+
+            if (response.ok) {
+              const fila = boton.closest('tr'); //eliminar la fila de la tabla sin recargar
+              fila.remove();
+                  
+              const tbody = document.querySelector('tbody');
+              if (tbody.children.length === 0) {
+                location.reload(); 
+              }
+            } else {
+              alert('Error al eliminar la película');
+            }
+          } catch (error) {
+            console.error('Error:', error);
+            alert('Hubo un problema con la conexión');
+          }
+        }
+      </script>
+
     </main>
   </body>
 

@@ -2,23 +2,53 @@
 
   <body>
     <%-include("../components/nav.ejs")%>
-      <main>
-        <h1>Ingresar <%= title %></h1>
+    <main>
+      <h1>Ingresar <%= title %></h1>
 
-        <form class="formEntidad" action method="post">
+      <form class="formEntidad" id="formIngresarSala">
+        <label>Nombre
+          <input type="text" name="nombre" id="nombre_input">
+        </label><br>
 
-          <label id="nombre">Nombre
-            <input type="text" name="nombre" required>
-          </label><br>
+        <label>Capacidad
+          <input type="number" name="capacidad" id="capacidad_input">
+        </label><br>
 
-          <label id="capacidad">Capacidad
-            <input type="number" name="capacidad" required>
-          </label><br>
+        <button class="formEntidad__submit" type="button" onclick="enviarFormulario()">Enviar</button>
+      </form>
 
-          <input type="submit">
+      <script>
+        async function enviarFormulario() {
+          const data = {
+            nombre: document.getElementById('nombre_input').value,
+            capacidad: parseInt(document.getElementById('capacidad_input').value)
+          };
 
-        </form>
-      </main>
+          try {
+            const response = await fetch('/salas/ingresar', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+              alert("Sala ingresada con éxito");
+              window.location.href = '/salas'; // Redirigir a la lista  
+            } else {
+              // Si el servidor responde con 400 mostrar los mensajes de error
+              const mensajesError = result.result.join("\n"); 
+              alert("Error en la validación:\n" + mensajesError);
+            }
+          } catch (error) {
+            console.error("Error en la petición:", error); 
+            alert("Ocurrió un error inesperado en el servidor.");
+          }
+        }
+      </script>
+      
+    </main>
   </body>
 
   <%-include("../components/footer.ejs")%>

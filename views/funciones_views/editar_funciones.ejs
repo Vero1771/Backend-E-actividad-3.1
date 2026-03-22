@@ -6,7 +6,7 @@
     <main>
       <h1><%= title %></h1>
 
-      <form class="formEntidad" action="/funciones/editar/<%= funcion.id_funcion %>?_method=PUT" method="post">
+      <form class="formEntidad" id="formEditarFuncion">
 
         <div>
           <label for="id_pelicula">Elige una Película</label><br>
@@ -58,9 +58,42 @@
               
         <br>
 
-        <input type="submit"  value="Guardar Cambios">
+        <button class="formEntidad__submit" type="button" onclick="actualizarFuncion('<%= funcion.id_funcion %>')">Guardar Cambios</button>
 
       </form>
+
+       <script>
+          async function actualizarFuncion(id) {
+            const data = {
+              id_pelicula: document.getElementById('id_pelicula').value,
+              id_sala: document.getElementById('id_sala').value,
+              fecha_hora: document.getElementById('fecha_hora').value
+            };
+
+            try {
+              const response = await fetch(`/funciones/editar/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+              });
+
+              const result = await response.json();
+
+              if (response.ok) {
+                alert("Función actualizada con éxito");
+                window.location.href = '/funciones'; // Redirigir a la lista
+              } else {
+                // Si el servidor responde con 400 mostrar los mensajes de error
+                const mensajesError = result.result.join("\n"); 
+                alert("Error en la validación:\n" + mensajesError);
+              }
+            } catch (error) {
+              console.error("Error:", error);
+              alert("Ocurrió un problema al conectar con el servidor.");
+            }
+          }
+        </script>
+
     </main>
   </body>
 

@@ -4,6 +4,11 @@
     <main>
       <h1><%= title %></h1>
       <p>Welcome to <%= title %></p>
+
+      <% if (user) { %>
+        <p>Sesión iniciada como: <%= user.email %></p>
+      <% } %>
+
     </main>
   </body>
 

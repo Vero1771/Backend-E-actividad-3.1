@@ -5,18 +5,18 @@
       <main>
         <h1>Ingresar <%= title %></h1>
 
-        <form class="formEntidad" action method="post">
+        <form class="formEntidad" id="formIngresarProducto">
 
           <label id="nombre">Nombre
-            <input type="text" name="nombre" required>
+            <input type="text" name="nombre" id="nombre_input">
           </label><br>
 
           <label id="cantidad">Cantidad
-            <input type="number" name="cantidad" required>
+            <input type="number" name="cantidad" id="cantidad_input">
           </label><br>
 
           <label id="precio_unitario">Precio Unitario$
-            <input type="number" name="precio_unitario" required>
+            <input type="number" name="precio_unitario" id="precio_unitario_input">
           </label><br>
 
           <label id="en_stock">
@@ -29,9 +29,50 @@
             </div>
           </label><br>
 
-          <input type="submit">
+          <button class="formEntidad__submit" type="button" onclick="enviarFormulario()">Enviar</button>
 
         </form>
+    
+        <script>
+          async function enviarFormulario() {
+            const nombre = document.getElementById('nombre_input').value;
+            const cantidad = document.getElementById('cantidad_input').value;
+            const precio_unitario = document.getElementById('precio_unitario_input').value;
+
+            const radioClasificacion = document.querySelector('input[name="en_stock"]:checked');
+            const en_stock = radioClasificacion ? parseInt(radioClasificacion.value) : null;
+
+            const data = {
+              nombre,
+              cantidad,
+              precio_unitario,
+              en_stock
+            };
+
+            try {
+              const response = await fetch('/productos/ingresar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+              });
+
+              const result = await response.json();
+
+              if (response.ok) {
+                alert("Producto ingresado con éxito");
+                window.location.href = '/productos/todos'; // Redirigir a la lista  
+              } else {
+                // Si el servidor responde con 400 mostrar los mensajes de error
+                const mensajesError = result.result.join("\n"); 
+                alert("Error en la validación:\n" + mensajesError);
+              }
+            } catch (error) {
+              console.error("Error en la petición:", error); 
+              alert("Ocurrió un error inesperado en el servidor.");
+            }
+          }
+        </script>
+
       </main>
   </body>
 

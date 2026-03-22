@@ -5,15 +5,46 @@
       <main>
         <h1><%= title %>: <%= asiento.nombre %></h1>
 
-        <form class="formEntidad" action="/asientos/editar/<%= asiento.id_asiento %>?_method=PUT"  method="post">
+        <form class="formEntidad" id="formEditarAsiento">
 
           <label id="nombre">Nombre
-            <input type="text" name="nombre" value="<%= asiento.nombre %>" required>
+            <input type="text" id="nombre_input" name="nombre" value="<%= asiento.nombre %>">
           </label><br>
 
-          <input type="submit"  value="Guardar Cambios">
+          <button class="formEntidad__submit" type="button" onclick="actualizarAsiento('<%= asiento.id_asiento %>')">Guardar Cambios</button>
 
         </form>
+
+        <script>
+          async function actualizarAsiento(id) {
+            const data = {
+              nombre: document.getElementById('nombre_input').value
+            };
+
+            try {
+              const response = await fetch(`/asientos/editar/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+              });
+
+              const result = await response.json();
+
+              if (response.ok) {
+                alert("Asiento actualizado con éxito");
+                window.location.href = '/asientos'; // Redirigir a la lista
+              } else {
+                // Si el servidor responde con 400 mostrar los mensajes de error
+                const mensajesError = result.result.join("\n"); 
+                alert("Error en la validación:\n" + mensajesError);
+              }
+            } catch (error) {
+              console.error("Error:", error);
+              alert("Ocurrió un problema al conectar con el servidor.");
+            }
+          }
+        </script>
+
       </main>
   </body>
 

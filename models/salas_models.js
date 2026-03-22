@@ -8,11 +8,11 @@ class SalasModel {
       if (sala[campo] === undefined || sala[campo] === null) errors.push(`El campo ${campo} es obligatorio`);
     }
 
-    if (typeof (sala.nombre) !== "string") {
+    if (typeof (sala.nombre) !== "string" || sala.nombre == "") {
       errors.push("El nombre de la sala debe ser una cadena de texto");
     }
 
-    if (isNaN(sala.capacidad) || sala.capacidad < 0) {
+    if (isNaN(sala.capacidad) || sala.capacidad <= 0) {
       errors.push("La capacidad de la sala debe ser un número válido");
     }
 

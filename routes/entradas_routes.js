@@ -20,6 +20,13 @@ router.get('/no_vendidas', (req, res) => {
     .catch(err => res.status(err.code).json(err));
 });
 
+/* (GET) Mostrar todas las entradas vendidas */
+router.get('/vendidas', (req, res) => {
+  Entradas_Controller.mostrar_entradas_no_vendidas()
+    .then(r => res.status(r.code).json(r))
+    .catch(err => res.status(err.code).json(err));
+});
+
 /* (GET) Buscar una entrada por su ID */
 router.get('/buscar/:id', (req, res) => {
   Entradas_Controller.mostrar_entradas_por_id(req.params.id)
@@ -100,7 +107,7 @@ router.get('/tus_entradas', checkLoginView, function (req, res, next) {
 });
 
 /* (GET) Entradas sin vender */
-router.get('/sin_vender', function (req, res, next) {
+router.get('/disponibles', function (req, res, next) {
   Entradas_Controller.mostrar_entradas_no_vendidas()
     .then((r) => {
       res.render('./entradas_views/entradas_sin_vender', { title: 'Entradas sin Vender', entradas_list: r.result });
@@ -114,8 +121,23 @@ router.get('/sin_vender', function (req, res, next) {
     });
 });
 
+/* (GET) Entradas vendidas */
+router.get('/entradas_vendidas', checkLoginAdmin, function (req, res, next) {
+  Entradas_Controller.mostrar_entradas_vendidas()
+    .then((r) => {
+      res.render('./entradas_views/entradas_vendidas', { title: 'Entradas Vendidas', entradas_list: r.result });
+    })
+    .catch(err => {
+      res.status(500).render('error', {
+        title: 'Error del Servidor',
+        code: 500,
+        message: 'No pudimos conectar con la base de datos'
+      });
+    });
+});
+
 /* (POST) */
-router.get('/ingresar', function (req, res, next) {
+router.get('/ingresar', checkLoginAdmin, function (req, res, next) {
   Funciones_Controller.mostrar_funciones()
     .then((funciones) => {
       Asientos_Controller.mostrar_asientos()
@@ -144,7 +166,7 @@ router.get('/ingresar', function (req, res, next) {
 });
 
 /* (PUT) Comprar entradas */
-router.get('/comprar', function (req, res, next) {
+router.get('/comprar', checkLoginUser, function (req, res, next) {
   Entradas_Controller.mostrar_entradas_no_vendidas()
     .then((productos) => {
       Metodos_Pagos_Controller.mostrar_metodos_pago()
@@ -173,7 +195,7 @@ router.get('/comprar', function (req, res, next) {
 });
 
 /* (PUT) Mostrar formulario de edición */
-router.get('/actualizar/:id', function (req, res, next) {
+router.get('/actualizar/:id', checkLoginAdmin, function (req, res, next) {
   Funciones_Controller.mostrar_funciones()
     .then((funciones) => {
       Asientos_Controller.mostrar_asientos()
