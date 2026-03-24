@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 15-03-2026 a las 21:58:25
+-- Tiempo de generación: 24-03-2026 a las 19:38:13
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -184,7 +184,13 @@ INSERT INTO `entradas` (`id_entrada`, `id_venta`, `id_funcion`, `id_asiento`, `p
 (39, 11, 11, 39, 12.50),
 (40, 11, 11, 40, 12.50),
 (41, 11, 11, 41, 12.50),
-(42, 11, 11, 42, 12.50);
+(42, 11, 11, 42, 12.50),
+(43, 19, 5, 5, 15.00),
+(44, 20, 5, 6, 15.00),
+(45, NULL, 5, 7, 15.00),
+(46, NULL, 5, 8, 15.00),
+(47, NULL, 5, 9, 15.00),
+(48, NULL, 5, 10, 15.00);
 
 -- --------------------------------------------------------
 
@@ -407,7 +413,11 @@ INSERT INTO `ventas` (`id_venta`, `id_metodo`, `fecha`, `total`, `id_usuario`) V
 (13, 2, '2026-01-02 19:45:00', 4.00, NULL),
 (14, 3, '2026-01-03 19:20:00', 40.00, NULL),
 (15, 1, '2026-01-04 16:50:00', 10.00, NULL),
-(16, 2, '2026-01-05 20:50:00', 20.00, NULL);
+(16, 2, '2026-01-05 20:50:00', 20.00, NULL),
+(17, 1, '2026-03-24 14:36:24', 12.00, 2),
+(18, 1, '2026-03-24 14:36:29', 5.00, 2),
+(19, 1, '2026-03-24 14:37:25', 15.00, 2),
+(20, 1, '2026-03-24 14:37:34', 15.00, 2);
 
 -- --------------------------------------------------------
 
@@ -432,7 +442,10 @@ INSERT INTO `ventas_productos` (`id_venta_producto`, `id_producto`, `id_venta`, 
 (2, 2, 13, 2, 4.00),
 (3, 3, 14, 5, 40.00),
 (4, 4, 15, 2, 10.00),
-(5, 5, 16, 4, 20.00);
+(5, 5, 16, 4, 20.00),
+(6, 1, 17, 1, 10.00),
+(7, 2, 17, 1, 2.00),
+(8, 4, 18, 1, 5.00);
 
 --
 -- Índices para tablas volcadas
@@ -510,7 +523,8 @@ ALTER TABLE `salas`
 -- Indices de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  ADD PRIMARY KEY (`id_usuario`);
+  ADD PRIMARY KEY (`id_usuario`),
+  ADD UNIQUE KEY `email` (`email`);
 
 --
 -- Indices de la tabla `ventas`
@@ -554,7 +568,7 @@ ALTER TABLE `clasificacion_peliculas`
 -- AUTO_INCREMENT de la tabla `entradas`
 --
 ALTER TABLE `entradas`
-  MODIFY `id_entrada` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `id_entrada` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT de la tabla `funciones`
@@ -602,13 +616,13 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `ventas`
 --
 ALTER TABLE `ventas`
-  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT de la tabla `ventas_productos`
 --
 ALTER TABLE `ventas_productos`
-  MODIFY `id_venta_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_venta_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Restricciones para tablas volcadas
@@ -647,7 +661,7 @@ ALTER TABLE `peliculas_categorias`
 --
 ALTER TABLE `ventas`
   ADD CONSTRAINT `ventas_ibfk_1` FOREIGN KEY (`id_metodo`) REFERENCES `metodos_pago` (`id_metodo`),
-  ADD CONSTRAINT `ventas_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE;
+  ADD CONSTRAINT `ventas_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`) ON DELETE SET NULL;
 
 --
 -- Filtros para la tabla `ventas_productos`

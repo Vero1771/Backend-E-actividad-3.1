@@ -39,9 +39,17 @@
                 alert("Admin ingresado con éxito");
                 window.location.href = '/usuarios'; // Redirigir a la lista  
               } else {
-                // Si el servidor responde con 400 mostrar los mensajes de error
-                const mensajesError = result.result.join("\n"); 
-                alert("Error en la validación:\n" + mensajesError);
+                if (response.status === 409 || typeof result.result === 'string') {
+                  alert("Atención: " + result.message);
+                } 
+                // Si es el array de errores
+                else if (Array.isArray(result.result)) {
+                  const mensajesError = result.result.join("\n");
+                  alert("Errores de validación:\n" + mensajesError);
+                } 
+                else {
+                  alert("Error: " + (result.message || "No se pudo completar el registro"));
+                }
               }
             } catch (error) {
               console.error("Error en la petición:", error); 
