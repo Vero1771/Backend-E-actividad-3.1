@@ -28,7 +28,9 @@
                     <td>    
                       <div class="botonera">
                         <a class="botonera__opcion opcion__editar" href="/usuarios/actualizar/<%= u.id_usuario %>" class="button">Editar</a>
-                        <button class="botonera__opcion opcion__eliminar" onclick="eliminarUsuario(this, '<%= u.id_usuario %>')"> X </button> 
+                        <% if(u.id_usuario != 1) { %>
+                          <button class="botonera__opcion opcion__eliminar" onclick="eliminarUsuario(this, '<%= u.id_usuario %>')"> X </button> 
+                        <% }  %>
                       </div>
                     </td>
                   </tr>
