@@ -142,7 +142,7 @@ npm run dev
   - `/eliminar/:id` — (DELETE) Eliminar ventas por su ID. (admin)
 
 - `/productos` 
-  - `/mostrar` — (GET) Mostrar todos los productos. (Sin rol)
+  - `/mostrar` — (GET) Mostrar todos los productos. (admin)
   - `/en_stock` — (GET) Mostrar los productos en stock. (Sin rol)
   - `/buscar/:id` — (GET) Mostrar productos por su ID. (Sin rol)
   - `/ingresar` — (POST) Ingresar productos. (admin)

@@ -201,9 +201,13 @@ class PeliculasModel {
           }
           resolve({ code: 404, message: "no hay películas registradas con ese ID", result: rows })
         })
-        .catch(err =>
+        .catch((err) => {
+          // El código 1451 corresponde a restricción de llave foránea
+          if (err.errno === 1451 || err.code === 'ER_ROW_IS_REFERENCED_2') {
+            return reject({ code: 500, message: "No se puede eliminar la película porque tiene funciones asignadas", result: [err] })
+          }
           reject({ code: 500, message: err.message, result: [err] })
-        );
+        });
     });
   }
 }

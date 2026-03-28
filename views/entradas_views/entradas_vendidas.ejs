@@ -42,9 +42,7 @@
                       <td>    
                         <div class="botonera">
                           <a class="botonera__opcion opcion__editar" href="/entradas/actualizar/<%= e.id_entrada %>" class="button">Editar</a>
-                          <form class="botonera__opcion" action="/entradas/eliminar/<%= e.id_entrada %>/?_method=DELETE" method="post" onsubmit="return confirm('¿Estás seguro de eliminar esta entrada?');">
-                            <input class="opcion__eliminar" type="submit" class="button" value="X">
-                          </form>
+                          <button class="botonera__opcion opcion__eliminar" onclick="eliminarEntrada(this, '<%= e.id_entrada %>')"> X </button>  
                         </div>
                       </td>
                     <% } %>
@@ -53,6 +51,37 @@
               <% }); %>
           </tbody>
       </table>
+
+      <script>
+        async function eliminarEntrada(boton, id) {
+          if (!confirm('¿Estás seguro de eliminar esta entrada?')) return;
+
+          try {
+            const response = await fetch(`/entradas/eliminar/${id}`, {
+              method: 'DELETE', 
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            });
+
+            if (response.ok) {
+              const fila = boton.closest('tr'); //eliminar la fila de la tabla sin recargar
+              fila.remove();
+                  
+              const tbody = document.querySelector('tbody');
+              if (tbody.children.length === 0) {
+                location.reload(); 
+              }
+            } else {
+              alert('Error al eliminar la entrada \n Posiblemente tenga relación con otra entidad');
+            }
+          } catch (error) {
+            console.error('Error:', error);
+            alert('Hubo un problema con la conexión');
+          }
+        }
+      </script>
+
     </main>
 
   </body>
